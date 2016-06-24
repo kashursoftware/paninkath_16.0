@@ -48,9 +48,9 @@
 
 		document.addEventListener("deviceready", onDeviceReady, false);
 
-		$(document).on("pagecreate","#pageone",function(){
+		$(document).on("pagecreate","#paninKathSplash",function(){
 
-			   // jQuery events go here...
+			   console.log("Page created....................!!!!");
 
 		});
 
@@ -66,7 +66,7 @@
 </head>
 
 <body>
-    <div class="app">
+    <div id="paninKathSplash" class="app" data-role="page">
         <h1>PaninKath</h1>
         <div id="deviceready" class="blink">
             <p class="event listening">Connecting to PaninKath</p>
