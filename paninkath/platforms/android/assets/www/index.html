@@ -48,9 +48,44 @@
 
 		document.addEventListener("deviceready", onDeviceReady, false);
 
-		$(document).on("pagecreate","#paninKathSplash",function(){
+		$(document).on("pagecreate","#login",function(){
 
-			   console.log("Page created....................!!!!");
+			   $("#signUpBtn").on("tap",function(){
+			   
+			   
+					$.mobile.changePage( "#signUp1", { transition: "slide", changeHash: false });
+			   
+			   });
+
+			   $("#backToLogin").on("tap",function(){
+			   
+			   
+					$.mobile.changePage( "#login", { transition: "slide", changeHash: false, reverse: true });
+			   
+			   });
+
+			   $("#nextBtn").on("tap",function(){
+			   
+			   
+					$.mobile.changePage( "#signUp2", { transition: "slide", changeHash: false});
+			   
+			   });
+
+
+
+			   $("#doneBtn").on("tap",function(){
+			   
+			   
+					$.mobile.changePage( "#login", { transition: "slide", changeHash: false, reverse: true });
+			   
+			   });
+
+			   $("#backToSignUp1").on("tap",function(){
+			   
+			   
+					$.mobile.changePage( "#signUp1", { transition: "slide", changeHash: false, reverse: true });
+			   
+			   });
 
 		});
 
@@ -66,13 +101,61 @@
 </head>
 
 <body>
-    <div id="paninKathSplash" class="app" data-role="page">
+    <div id="paninKath" class="app">
         <h1>PaninKath</h1>
         <div id="deviceready" class="blink">
-            <p class="event listening">Connecting to PaninKath</p>
-            <p class="event received">App is Ready</p>
-        </div>
+            <p class="event listening">Sabr jinab...</p>
+        </div>		
     </div>
+
+	<div id="login" class="login" data-role="page">
+			<div data-role="header">
+				<h1><b>PaninKath...</b></h1>
+		    </div>
+		   <div data-role="main" class="ui-content">
+		     <form method="post" action="demoform.asp">
+				<input type="text" name="uname" id="uname" placeHolder="User Name">
+				<input type="password" name="pwd" id="pwd" placeHolder="Password">
+				<input type="submit" value="Login" id="submitBtn"> <!--data-inline="true" -->
+			 </form>
+			 <div id="social" class="social">
+				<input type="button" value="FB">
+				<input type="button" value="Gmail">
+			 </div>
+ 			 <input type="button" value="Sign Up!" id="signUpBtn">
+		   </div>
+	</div>
+
+	<div id="signUp1" class="signUp" data-role="page">
+			<div data-role="header">
+				<h1><b>PaninKath...</b></h1>
+		    </div>
+		   <div data-role="main" class="ui-content">
+		     <form method="post" action="demoform.asp">
+				<input type="text" name="fname" id="fname" placeHolder="First Name">
+				<input type="text" name="lname" id="lname" placeHolder="Last Name">
+				<input type="email" name="uemail" id="uemail" placeHolder="email">
+			 </form>
+			 <input type="button" value="Next" id="nextBtn" data-inline="true"> <!--data-inline="true" -->
+			 <input type="button" value="Back" id="backToLogin" data-inline="true"> <!--data-inline="true" -->
+		   </div>
+	</div>
+
+	<div id="signUp2" class="signUp" data-role="page">
+			<div data-role="header">
+				<h1><b>PaninKath...</b></h1>
+		    </div>
+		   <div data-role="main" class="ui-content">
+		     <form method="post" action="demoform.asp">
+				<input type="text" name="uname" id="uname" placeHolder="User Name">
+				<input type="password" name="pwd" id="upwd" placeHolder="Password">
+				<input type="password" name="cpwd" id="cupwd" placeHolder="Confirm Password">
+			 </form>
+			 <input type="button" value="Back" id="backToSignUp1" data-inline="true"> <!--data-inline="true" -->
+			 <input type="button" value="Done" id="doneBtn" data-inline="true"> <!--data-inline="true" -->
+		   </div>
+	</div>
+
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
     <script type="text/javascript">
