@@ -48,44 +48,10 @@
 
 		document.addEventListener("deviceready", onDeviceReady, false);
 
+
 		$(document).on("pagecreate","#login",function(){
 
-			   $("#signUpBtn").on("tap",function(){
 			   
-			   
-					$.mobile.changePage( "#signUp1", { transition: "slide", changeHash: false });
-			   
-			   });
-
-			   $("#backToLogin").on("tap",function(){
-			   
-			   
-					$.mobile.changePage( "#login", { transition: "slide", changeHash: false, reverse: true });
-			   
-			   });
-
-			   $("#nextBtn").on("tap",function(){
-			   
-			   
-					$.mobile.changePage( "#signUp2", { transition: "slide", changeHash: false});
-			   
-			   });
-
-
-
-			   $("#doneBtn").on("tap",function(){
-			   
-			   
-					$.mobile.changePage( "#login", { transition: "slide", changeHash: false, reverse: true });
-			   
-			   });
-
-			   $("#backToSignUp1").on("tap",function(){
-			   
-			   
-					$.mobile.changePage( "#signUp1", { transition: "slide", changeHash: false, reverse: true });
-			   
-			   });
 
 		});
 
@@ -116,13 +82,15 @@
 		     <form method="post" action="demoform.asp">
 				<input type="text" name="uname" id="uname" placeHolder="User Name">
 				<input type="password" name="pwd" id="pwd" placeHolder="Password">
-				<input type="submit" value="Login" id="submitBtn"> <!--data-inline="true" -->
+				<a href="#login" data-role="button" class="button ui-disabled" data-transition="slide" data-direction="forward" changeHash="false">Login</a>
 			 </form>
 			 <div id="social" class="social">
-				<input type="button" value="FB">
-				<input type="button" value="Gmail">
+				<a href="#login" data-role="button" class="button ui-disabled" data-transition="slide" data-direction="forward" changeHash="false">FB</a>
+				<a href="#login" data-role="button" class="button ui-disabled" data-transition="slide" data-direction="forward" changeHash="false">Gmail</a>
 			 </div>
- 			 <input type="button" value="Sign Up!" id="signUpBtn">
+
+			 <a href="#signUp1" data-role="button" class="button" data-transition="slide" data-direction="forward" changeHash="false">Sign Up!</a>
+
 		   </div>
 	</div>
 
@@ -136,8 +104,10 @@
 				<input type="text" name="lname" id="lname" placeHolder="Last Name">
 				<input type="email" name="uemail" id="uemail" placeHolder="email">
 			 </form>
-			 <input type="button" value="Next" id="nextBtn" data-inline="true"> <!--data-inline="true" -->
-			 <input type="button" value="Back" id="backToLogin" data-inline="true"> <!--data-inline="true" -->
+
+	         <a href="#login" data-role="button" class="button" data-transition="slide" data-direction="reverse" data-inline="true" changeHash="false">Back</a> <!--data-inline="true" -->
+			 <a href="#signUp2" data-role="button" class="button" data-transition="slide" data-direction="forward" data-inline="true" changeHash="false">Next</a>
+			 
 		   </div>
 	</div>
 
@@ -151,8 +121,10 @@
 				<input type="password" name="pwd" id="upwd" placeHolder="Password">
 				<input type="password" name="cpwd" id="cupwd" placeHolder="Confirm Password">
 			 </form>
-			 <input type="button" value="Back" id="backToSignUp1" data-inline="true"> <!--data-inline="true" -->
-			 <input type="button" value="Done" id="doneBtn" data-inline="true"> <!--data-inline="true" -->
+
+			 <a href="#signUp1" data-role="button" class="button" data-transition="slide" data-direction="reverse" data-inline="true" changeHash="false">Back</a> <!--data-inline="true" -->
+ 			 <a href="#login" data-role="button" class="button" data-transition="slide" data-direction="forward" data-inline="true" changeHash="false">Done</a> <!--data-inline="true" -->
+
 		   </div>
 	</div>
 
