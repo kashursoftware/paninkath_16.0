@@ -62,6 +62,14 @@
         <param name="android-package" value="org.apache.cordova.whitelist.WhitelistPlugin" />
         <param name="onload" value="true" />
     </feature>
+    <feature name="FacebookConnectPlugin">
+        <param name="android-package" value="org.apache.cordova.facebook.ConnectPlugin" />
+    </feature>
+    <access origin="https://m.facebook.com" />
+    <access origin="https://graph.facebook.com" />
+    <access origin="https://api.facebook.com" />
+    <access origin="https://*.fbcdn.net" />
+    <access origin="https://*.akamaihd.net" />
     <icon density="ldpi" src="res/icon/android/mipmap-ldpi/ic_launcher.png" />
     <icon density="mdpi" src="res/icon/android/mipmap-mdpi/ic_launcher.png" />
     <icon density="hdpi" src="res/icon/android/mipmap-hdpi/ic_launcher.png" />

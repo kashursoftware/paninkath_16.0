@@ -69,6 +69,11 @@
         },
         "cordova-plugin-compat": {
             "PACKAGE_NAME": "com.paninkath"
+        },
+        "phonegap-facebook-plugin": {
+            "APP_ID": "1726195990981110",
+            "APP_NAME": "PaninKath",
+            "PACKAGE_NAME": "com.paninkath"
         }
     },
     "dependent_plugins": {}
