@@ -44,6 +44,13 @@
 	<script src="js/libs/jquery.mobile-1.4.5/jquery-1.11.3.min.js"></script>
 	<script src="js/libs/jquery.mobile-1.4.5/jquery.mobile-1.4.5.js"></script>
 
+	<script src="js/libs/jquery-2.1.4.min.js"></script>
+
+	<script src="js/libs/ionic.bundle.js"></script>
+	<script src="js/libs/ng-cordova.min.js"></script>
+	<script src="js/libs/ng-cordova-oauth.min.js"></script>
+
+
 	<script>
 
 		document.addEventListener("deviceready", onDeviceReady, false);
@@ -67,6 +74,30 @@
 </head>
 
 <body>
+
+
+		<script>
+		  window.fbAsyncInit = function() {
+			FB.init({
+			  appId      : '1726195990981110',
+			  xfbml      : true,
+			  version    : 'v2.6'
+			});
+		  };
+
+		  (function(d, s, id){
+			 var js, fjs = d.getElementsByTagName(s)[0];
+			 if (d.getElementById(id)) {return;}
+			 js = d.createElement(s); js.id = id;
+			 js.src = "https://connect.facebook.net/en_US/all.js";
+			 fjs.parentNode.insertBefore(js, fjs);
+		   }(document, 'script', 'facebook-jssdk'));
+		</script>
+
+			<div ng-app="facebookApp">
+				<div ng-controller="mainCtrl"></div>
+			</div>
+
     <div id="paninKath" class="app">
         <h1>PaninKath</h1>
         <div id="deviceready" class="blink">
@@ -85,7 +116,7 @@
 				<a href="#login" data-role="button" class="button ui-disabled" data-transition="slide" data-direction="forward" changeHash="false">Login</a>
 			 </form>
 			 <div id="social" class="social">
-				<a href="#login" data-role="button" class="button ui-disabled" data-transition="slide" data-direction="forward" changeHash="false">FB</a>
+				<a target="_blank" href="#login" onclick="login()" data-role="button">FB</a>
 				<a href="#login" data-role="button" class="button ui-disabled" data-transition="slide" data-direction="forward" changeHash="false">Gmail</a>
 			 </div>
 
@@ -130,6 +161,49 @@
 
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
+	<script>
+	
+		angular.module("facebookApp", ["ionic", "ngCordova"]).controller("mainCtrl", ["$scope", "$cordovaOauth", "$http", function($scope, $cordovaOauth, $http) {
+	    window.cordovaOauth = $cordovaOauth;
+		window.http = $http; }]);
+
+
+		function login()
+		{
+			facebookLogin(window.cordovaOauth, window.http);
+		}
+
+		function facebookLogin($cordovaOauth, $http)
+		{
+		    $cordovaOauth.facebook("1726195990981110", ["email", "public_profile"], {redirect_uri: "http://localhost/callback"}).then(function(result){
+			displayData($http, result.access_token);
+	    },  function(error){
+            alert("Error: " + error);});
+		}
+
+		function displayData($http, access_token)
+		{
+			$http.get("https://graph.facebook.com/v2.2/me", {params: {access_token: access_token, fields: "name,gender,location,picture", format: "json" }}).then(function(result) {
+				var name = result.data.name;
+		        var gender = result.data.gender;
+		        var picture = result.data.picture;
+
+		        var html = '<table id="table" data-role="table" data-mode="column" class="ui-responsive"><thead><tr><th>Field</th><th>Info</th></tr></thead><tbody>';
+		        html = html + "<tr><td>" + "Name" + "</td><td>" + name + "</td></tr>";
+		        html = html + "<tr><td>" + "Gender" + "</td><td>" + gender + "</td></tr>";
+		        html = html + "<tr><td>" + "Picture" + "</td><td><img src='" + picture.data.url + "' /></td></tr>";
+
+		        html = html + "</tbody></table>";
+
+		        document.getElementById("listTable").innerHTML = html;
+		        $.mobile.changePage($("#profile"), "slide", true, true);
+		}, function(error) {
+			alert("Error: " + error);
+		});
+}
+
+
+	</script>
     <script type="text/javascript">
         app.initialize();
     </script>
