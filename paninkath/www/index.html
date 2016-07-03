@@ -35,7 +35,6 @@
     * Create your own at http://cspisawesome.com
     -->
      <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: 'unsafe-inline' https://ssl.gstatic.com; style-src 'self' 'unsafe-inline'; media-src *" />
-
     <link rel="stylesheet" type="text/css" href="css/index.css" />
     <title>Hello World</title>
 	<link rel="stylesheet" href="js/libs/jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.css">
@@ -44,15 +43,41 @@
 
 	<script>
 		document.addEventListener("deviceready", onDeviceReady, false);
+
+
 		$(document).on("pagecreate","#login",function(){
 			   
 		});
 		function onDeviceReady(){
 		
-			console.log("Ready....................!!!!");
+			$("#fbLogin").on("tap",onFBLogin);
 
-			console.log("facebookConnectPlugin.................... "+facebookConnectPlugin);
 		}
+
+		function onFBLogin(){
+		
+			var fbLoginSuccess = function (userData) {
+			    //alert("UserInfo: " + JSON.stringify(userData));
+				onLoginSuccess();
+			}
+
+			facebookConnectPlugin.login(["public_profile"],
+			    fbLoginSuccess,
+			    function (error) { 
+					
+					alert("" + error) 
+				}
+			);
+
+		}
+
+		function onLoginSuccess(){
+		
+				$.mobile.changePage( "#home", { transition: "slide", changeHash: false });
+		};
+
+			
+
 	</script>
 
 </head>
@@ -76,7 +101,7 @@
 				<a href="#login" data-role="button" class="button ui-disabled" data-transition="slide" data-direction="forward" changeHash="false">Login</a>
 			 </form>
 			 <div id="social" class="social">
-				<a href="#login" data-role="button" class="button ui-disabled" data-transition="slide" data-direction="forward" changeHash="false">FB</a>
+				<a id="fbLogin" href="#login" data-role="button" data-transition="slide" data-direction="forward" changeHash="false">FB</a>
 				<a href="#login" data-role="button" class="button ui-disabled" data-transition="slide" data-direction="forward" changeHash="false">Gmail</a>
 			 </div>
 
@@ -116,6 +141,16 @@
 			 <a href="#signUp1" data-role="button" class="button" data-transition="slide" data-direction="reverse" data-inline="true" changeHash="false">Back</a> <!--data-inline="true" -->
  			 <a href="#login" data-role="button" class="button" data-transition="slide" data-direction="forward" data-inline="true" changeHash="false">Done</a> <!--data-inline="true" -->
 
+		   </div>
+	</div>
+
+
+	<div id="home" class="home" data-role="page">
+			<div data-role="header">
+				<h1><b>PaninKath...</b></h1>
+		    </div>
+		   <div data-role="main" class="ui-content">
+			<h1> Coming Soon...</h1>
 		   </div>
 	</div>
 
