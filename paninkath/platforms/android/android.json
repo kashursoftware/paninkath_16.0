@@ -181,7 +181,7 @@
                 "parents": {
                     "/*": [
                         {
-                            "xml": "<string name=\"fb_app_id\">1726195990981110</string>",
+                            "xml": "<string name=\"fb_app_id\">505827316274441</string>",
                             "count": 1
                         },
                         {
@@ -258,7 +258,7 @@
             "PACKAGE_NAME": "com.paninkath"
         },
         "phonegap-facebook-plugin": {
-            "APP_ID": "1726195990981110",
+            "APP_ID": "505827316274441",
             "APP_NAME": "PaninKath",
             "PACKAGE_NAME": "com.paninkath"
         }

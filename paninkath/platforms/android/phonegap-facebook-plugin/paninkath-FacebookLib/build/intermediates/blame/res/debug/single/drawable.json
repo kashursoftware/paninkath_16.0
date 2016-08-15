@@ -136,12 +136,12 @@
         "source": "C:\\Users\\Amjad\\kashursoftware\\paninkath_16.0\\paninkath\\platforms\\android\\phonegap-facebook-plugin\\paninkath-FacebookLib\\res\\drawable\\com_facebook_picker_list_focused.9.png"
     },
     {
-        "merged": "C:\\Users\\Amjad\\kashursoftware\\paninkath_16.0\\paninkath\\platforms\\android\\phonegap-facebook-plugin\\paninkath-FacebookLib\\build\\intermediates\\res\\merged\\debug\\drawable\\com_facebook_list_divider.9.png",
-        "source": "C:\\Users\\Amjad\\kashursoftware\\paninkath_16.0\\paninkath\\platforms\\android\\phonegap-facebook-plugin\\paninkath-FacebookLib\\res\\drawable\\com_facebook_list_divider.9.png"
-    },
-    {
         "merged": "C:\\Users\\Amjad\\kashursoftware\\paninkath_16.0\\paninkath\\platforms\\android\\phonegap-facebook-plugin\\paninkath-FacebookLib\\build\\intermediates\\res\\merged\\debug\\drawable\\com_facebook_button_like_icon_selected.png",
         "source": "C:\\Users\\Amjad\\kashursoftware\\paninkath_16.0\\paninkath\\platforms\\android\\phonegap-facebook-plugin\\paninkath-FacebookLib\\res\\drawable\\com_facebook_button_like_icon_selected.png"
+    },
+    {
+        "merged": "C:\\Users\\Amjad\\kashursoftware\\paninkath_16.0\\paninkath\\platforms\\android\\phonegap-facebook-plugin\\paninkath-FacebookLib\\build\\intermediates\\res\\merged\\debug\\drawable\\com_facebook_list_divider.9.png",
+        "source": "C:\\Users\\Amjad\\kashursoftware\\paninkath_16.0\\paninkath\\platforms\\android\\phonegap-facebook-plugin\\paninkath-FacebookLib\\res\\drawable\\com_facebook_list_divider.9.png"
     },
     {
         "merged": "C:\\Users\\Amjad\\kashursoftware\\paninkath_16.0\\paninkath\\platforms\\android\\phonegap-facebook-plugin\\paninkath-FacebookLib\\build\\intermediates\\res\\merged\\debug\\drawable\\com_facebook_profile_picture_blank_portrait.png",

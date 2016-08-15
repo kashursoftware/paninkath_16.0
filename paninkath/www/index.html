@@ -34,7 +34,14 @@
         * Enable eval(): add 'unsafe-eval' to default-src
     * Create your own at http://cspisawesome.com
     -->
-     <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: 'unsafe-inline' https://ssl.gstatic.com; style-src 'self' 'unsafe-inline'; media-src *" />
+     <!--<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: 'unsafe-inline' https://ssl.gstatic.com; style-src 'self' 'unsafe-inline';script-src 'self' http://119.18.52.6:3500 'unsafe-inline' 'unsafe-eval'; media-src *" />-->
+	 
+	 <!--<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; script-src 'self' http://vps.hilfe.website 'unsafe-inline' 'unsafe-eval';  media-src *">-->
+	 <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; connect-src http://vps.hilfe.website:3500">
+
+
+	 
+
     <link rel="stylesheet" type="text/css" href="css/index.css" />
     <title>Hello World</title>
 	<link rel="stylesheet" href="js/libs/jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.css">
@@ -47,12 +54,52 @@
 
 		$(document).on("pagecreate","#login",function(){
 			   
+			   $("#doneBtn").on("click",registerUser);
+			   $("#loginBtn").on("click",loginUser);
 		});
 		function onDeviceReady(){
 		
 			$("#fbLogin").on("tap",onFBLogin);
+			
+			$("#doneBtn").on("tap",registerUser);			
+			
+			$("#loginBtn").on("tap",loginUser);
+			
 
 		}
+		
+		function registerUser(){
+		
+			
+			$.ajax({
+				url: "http://vps.hilfe.website:3500/addUser",
+				type: "get", //send it through get method
+				data:{"fName":$("#fName").val(),"lName": $("#lName").val() , "email":$("#uEmail").val(),"userName":$("#nUName").val(),"passWord":$("#nUPwd").val(),"cPassWord":$("#nUCPwd").val()},
+				success: function(response) {
+					console.log("sent......");
+				},
+				error: function(xhr) {
+					console.log(xhr);
+				}
+			});
+				
+		};
+		
+		function loginUser(){
+		
+			$.ajax({
+				url: "http://vps.hilfe.website:3500/loginUser",
+				type: "get", //send it through get method
+				data:{"uName":$("#uName").val(),"pwd":$("#uPwd").val()},
+				success: function(response) {
+					console.log("sent......");
+				},
+				error: function(xhr) {
+					console.log(xhr);
+				}
+			});
+			
+		};
 
 		function onFBLogin(){
 		
@@ -74,6 +121,7 @@
 		function onLoginSuccess(){
 		
 				$.mobile.changePage( "#home", { transition: "slide", changeHash: false });
+				
 		};
 
 			
@@ -96,16 +144,15 @@
 		    </div>
 		   <div data-role="main" class="ui-content">
 		     <form method="post" action="demoform.asp">
-				<input type="text" name="uname" id="uname" placeHolder="User Name">
-				<input type="password" name="pwd" id="pwd" placeHolder="Password">
-				<a href="#login" data-role="button" class="button ui-disabled" data-transition="slide" data-direction="forward" changeHash="false">Login</a>
+				<input id="uName" type="text" name="uname" id="uname" placeHolder="User Name">
+				<input id="uPwd" type="password" name="pwd" id="pwd" placeHolder="Password">
+				<a id="loginBtn" href="#home" data-role="button"  data-transition="slide" data-direction="forward" changeHash="false">Login</a><!--class="button ui-disabled"-->
 			 </form>
 			 <div id="social" class="social">
 				<a id="fbLogin" href="#login" data-role="button" data-transition="slide" data-direction="forward" changeHash="false">FB</a>
-				<a href="#login" data-role="button" class="button ui-disabled" data-transition="slide" data-direction="forward" changeHash="false">Gmail</a>
 			 </div>
 
-			 <a href="#signUp1" data-role="button" class="button" data-transition="slide" data-direction="forward" changeHash="false">Sign Up!</a>
+			 <a id="signUpBtn" href="#signUp1" data-role="button" class="button" data-transition="slide" data-direction="forward" changeHash="false">Sign Up!</a>
 
 		   </div>
 	</div>
@@ -116,9 +163,9 @@
 		    </div>
 		   <div data-role="main" class="ui-content">
 		     <form method="post" action="demoform.asp">
-				<input type="text" name="fname" id="fname" placeHolder="First Name">
-				<input type="text" name="lname" id="lname" placeHolder="Last Name">
-				<input type="email" name="uemail" id="uemail" placeHolder="email">
+				<input id="fName" type="text" name="fname" id="fname" placeHolder="First Name">
+				<input id="lName" type="text" name="lname" id="lname" placeHolder="Last Name">
+				<input id="uEmail" type="email" name="uemail" id="uemail" placeHolder="email">
 			 </form>
 
 	         <a href="#login" data-role="button" class="button" data-transition="slide" data-direction="reverse" data-inline="true" changeHash="false">Back</a> 
@@ -133,13 +180,13 @@
 		    </div>
 		   <div data-role="main" class="ui-content">
 		     <form method="post" action="demoform.asp">
-				<input type="text" name="uname" id="uname" placeHolder="User Name">
-				<input type="password" name="pwd" id="upwd" placeHolder="Password">
-				<input type="password" name="cpwd" id="cupwd" placeHolder="Confirm Password">
+				<input id="nUName" type="text" name="uname" id="uname" placeHolder="User Name">
+				<input id="nUPwd" type="password" name="pwd" id="upwd" placeHolder="Password">
+				<input id="nUCPwd" type="password" name="cpwd" id="cupwd" placeHolder="Confirm Password">
 			 </form>
 
 			 <a href="#signUp1" data-role="button" class="button" data-transition="slide" data-direction="reverse" data-inline="true" changeHash="false">Back</a> <!--data-inline="true" -->
- 			 <a href="#login" data-role="button" class="button" data-transition="slide" data-direction="forward" data-inline="true" changeHash="false">Done</a> <!--data-inline="true" -->
+ 			 <a id="doneBtn" href="#login" data-role="button" class="button" data-transition="slide" data-direction="forward" data-inline="true" changeHash="false">Done</a> <!--data-inline="true" -->
 
 		   </div>
 	</div>

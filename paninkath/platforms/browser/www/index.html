@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <!--
     Copyright (c) 2012-2016 Adobe Systems Incorporated. All rights reserved.
-
     Licensed to the Apache Software Foundation (ASF) under one
     or more contributor license agreements.  See the NOTICE file
     distributed with this work for additional information
@@ -9,9 +8,7 @@
     to you under the Apache License, Version 2.0 (the
     "License"); you may not use this file except in compliance
     with the License.  You may obtain a copy of the License at
-
     http://www.apache.org/licenses/LICENSE-2.0
-
     Unless required by applicable law or agreed to in writing,
     software distributed under the License is distributed on an
     "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -22,11 +19,11 @@
 <html>
 
 <head>
-	<meta http-equiv="Content-Security-Policy" content="script-src * 'unsafe-eval' 'unsafe-inline'; connect-src *; style-src * 'unsafe-inline' ; media-src *;">
     <meta charset="utf-8" />
     <meta name="format-detection" content="telephone=no" />
-    <meta name="msapplication-tap-highlight" content="no" />	
+    <meta name="msapplication-tap-highlight" content="no" />
     <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+	<!--<meta-data android:name="com.facebook.sdk.1726195990981110" android:value="@string/facebook_app_id"/>-->
     <!-- This is a wide open CSP declaration. To lock this down for production, see below. -->
     <!--<meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" />-->
     <!-- Good default declaration:
@@ -37,44 +34,55 @@
         * Enable eval(): add 'unsafe-eval' to default-src
     * Create your own at http://cspisawesome.com
     -->
-    <!--<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: 'unsafe-inline' https://ssl.gstatic.com; style-src 'self' 'unsafe-inline'; media-src *" />-->
-
+     <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: 'unsafe-inline' https://ssl.gstatic.com; style-src 'self' 'unsafe-inline'; media-src *" />
     <link rel="stylesheet" type="text/css" href="css/index.css" />
     <title>Hello World</title>
 	<link rel="stylesheet" href="js/libs/jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.css">
 	<script src="js/libs/jquery.mobile-1.4.5/jquery-1.11.3.min.js"></script>
 	<script src="js/libs/jquery.mobile-1.4.5/jquery.mobile-1.4.5.js"></script>
 
-	<script src="js/libs/jquery-2.1.4.min.js"></script>
-	<!--<script src="js/libs/ng-cordova.min.js"></script>
-	<script src="js/libs/ng-cordova-oauth.min.js"></script>
-	<script src="js/libs/ionic.bundle.js"></script>-->
-
-
 	<script>
-
 		document.addEventListener("deviceready", onDeviceReady, false);
 
 
 		$(document).on("pagecreate","#login",function(){
-
 			   
-
 		});
-
 		function onDeviceReady(){
 		
-			console.log("Ready....................!!!!");
+			$("#fbLogin").on("tap",onFBLogin);
+
 		}
 
+		function onFBLogin(){
+		
+			var fbLoginSuccess = function (userData) {
+			    //alert("UserInfo: " + JSON.stringify(userData));
+				onLoginSuccess();
+			}
 
+			facebookConnectPlugin.login(["public_profile"],
+			    fbLoginSuccess,
+			    function (error) { 
+					
+					alert("" + error) 
+				}
+			);
+
+		}
+
+		function onLoginSuccess(){
+		
+				$.mobile.changePage( "#home", { transition: "slide", changeHash: false });
+		};
+
+			
 
 	</script>
 
 </head>
 
 <body>
-
     <div id="paninKath" class="app">
         <h1>PaninKath</h1>
         <div id="deviceready" class="blink">
@@ -93,7 +101,7 @@
 				<a href="#login" data-role="button" class="button ui-disabled" data-transition="slide" data-direction="forward" changeHash="false">Login</a>
 			 </form>
 			 <div id="social" class="social">
-				<a target="_blank" href="#login" onclick="login()" data-role="button">FB</a>
+				<a id="fbLogin" href="#login" data-role="button" data-transition="slide" data-direction="forward" changeHash="false">FB</a>
 				<a href="#login" data-role="button" class="button ui-disabled" data-transition="slide" data-direction="forward" changeHash="false">Gmail</a>
 			 </div>
 
@@ -136,6 +144,17 @@
 		   </div>
 	</div>
 
+
+	<div id="home" class="home" data-role="page">
+			<div data-role="header">
+				<h1><b>PaninKath...</b></h1>
+		    </div>
+		   <div data-role="main" class="ui-content">
+			<h1> Coming Soon...</h1>
+		   </div>
+	</div>
+
+    <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
     <script type="text/javascript">
         app.initialize();
