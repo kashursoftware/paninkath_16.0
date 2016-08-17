@@ -34,10 +34,10 @@
         * Enable eval(): add 'unsafe-eval' to default-src
     * Create your own at http://cspisawesome.com
     -->
-     <!--<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: 'unsafe-inline' https://ssl.gstatic.com; style-src 'self' 'unsafe-inline';script-src 'self' http://119.18.52.6:3500 'unsafe-inline' 'unsafe-eval'; media-src *" />-->
+     <!--<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: 'unsafe-inline' https://ssl.gstatic.com; style-src 'self' 'unsafe-inline';script-src 'self' http://119.18.52.6:3800 'unsafe-inline' 'unsafe-eval'; media-src *" />-->
 	 
 	 <!--<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; script-src 'self' http://vps.hilfe.website 'unsafe-inline' 'unsafe-eval';  media-src *">-->
-	 <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; connect-src http://vps.hilfe.website:3500">
+	 <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; connect-src http://vps.hilfe.website:3800">
 
 
 	 
@@ -54,7 +54,7 @@
 
 		$(document).on("pagecreate","#login",function(){
 			   
-			   $("#doneBtn").on("click",registerUser);
+			  // $("#doneBtn").on("click",registerUser);
 			   $("#loginBtn").on("click",loginUser);
 		});
 		function onDeviceReady(){
@@ -72,7 +72,7 @@
 		
 			
 			$.ajax({
-				url: "http://vps.hilfe.website:3500/addUser",
+				url: "http://vps.hilfe.website:3800/addUser",
 				type: "get", //send it through get method
 				data:{"fName":$("#fName").val(),"lName": $("#lName").val() , "email":$("#uEmail").val(),"userName":$("#nUName").val(),"passWord":$("#nUPwd").val(),"cPassWord":$("#nUCPwd").val()},
 				success: function(response) {
@@ -88,7 +88,7 @@
 		function loginUser(){
 		
 			$.ajax({
-				url: "http://vps.hilfe.website:3500/loginUser",
+				url: "http://vps.hilfe.website:3800/loginUser",
 				type: "get", //send it through get method
 				data:{"uName":$("#uName").val(),"pwd":$("#uPwd").val()},
 				success: function(response) {
@@ -146,7 +146,7 @@
 		     <form method="post" action="demoform.asp">
 				<input id="uName" type="text" name="uname" id="uname" placeHolder="User Name">
 				<input id="uPwd" type="password" name="pwd" id="pwd" placeHolder="Password">
-				<a id="loginBtn" href="#home" data-role="button"  data-transition="slide" data-direction="forward" changeHash="false">Login</a><!--class="button ui-disabled"-->
+				<a id="loginBtn" data-role="button"  data-transition="slide" data-direction="forward" changeHash="false">Login</a><!--class="button ui-disabled"-->
 			 </form>
 			 <div id="social" class="social">
 				<a id="fbLogin" href="#login" data-role="button" data-transition="slide" data-direction="forward" changeHash="false">FB</a>
