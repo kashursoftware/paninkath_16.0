@@ -47,6 +47,9 @@
 	<link rel="stylesheet" href="js/libs/jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.css">
 	<script src="js/libs/jquery.mobile-1.4.5/jquery-1.11.3.min.js"></script>
 	<script src="js/libs/jquery.mobile-1.4.5/jquery.mobile-1.4.5.js"></script>
+	<script src="js/com/reg.js"></script>
+	<script src="js/com/login.js"></script>
+	
 
 	<script>
 		document.addEventListener("deviceready", onDeviceReady, false);
@@ -54,8 +57,8 @@
 
 		$(document).on("pagecreate","#login",function(){
 			   
-			   $("#doneBtn").on("click",registerUser);
-			   $("#loginBtn").on("click",loginUser);
+			  $("#doneBtn").on("click",registerUser);
+			  $("#loginBtn").on("click",loginUser);
 		});
 		function onDeviceReady(){
 		
@@ -66,45 +69,9 @@
 			$("#loginBtn").on("tap",loginUser);
 			
 
-		}
+		}	
 		
-		function registerUser(){
-		
-			
-			$.ajax({
-				url: "http://vps.hilfe.website:3800/addUser",
-				type: "get", //send it through get method
-				data:{"fName":$("#fName").val(),"lName": $("#lName").val() , "email":$("#uEmail").val(),"userName":$("#nUName").val(),"passWord":$("#nUPwd").val(),"cPassWord":$("#nUCPwd").val()},
-				success: function(response) {
-					console.log("sent......");
-				},
-				error: function(xhr) {
-					console.log(xhr);
-				}
-			});
-				
-		};
-		
-		function loginUser(){
-		
-			$.ajax({
-				url: "http://vps.hilfe.website:3800/loginUser",
-				type: "get", //send it through get method
-				data:{"uName":$("#uName").val(),"pwd":$("#uPwd").val()},
-				success: function(response) {
-					//window.localStorage.setItem("token", response.token);
-					//trial();
-					
-					onLoginSuccess(response);
-				},
-				error: function(xhr) {
-					console.log(xhr);
-				}
-			});
-			
-		};
-		
-		function trial(){
+		/*function trial(){
 			
 			$.ajax({
 				url : "http://vps.hilfe.website:3800/welcomeUser",
@@ -120,46 +87,7 @@
 				}
 			});
 			
-		};
-
-		function onFBLogin(){
-		
-			var fbLoginSuccess = function (userData) {
-			    //alert("UserInfo: " + JSON.stringify(userData));
-				onLoginSuccess();
-			}
-
-			facebookConnectPlugin.login(["public_profile"],
-			    fbLoginSuccess,
-			    function (error) { 
-					
-					alert("" + error) 
-				}
-			);
-
-		}
-
-		function onLoginSuccess(response){
-		
-				/*console.log(($("#welmsg")));
-				console.log(response.user.uName);
-				
-				$.mobile.changePage( "#home", { transition: "slide", changeHash: false });
-				$("#welmsg").text(response.user.uName);*/
-				
-				$( ":mobile-pagecontainer" ).on( "pagecontainerbeforechange", function( event, ui ) {
-				
-						var obj = jQuery.parseJSON(response.user);
-						$("#welmsg").text("Welcome to Paninkath "+obj.uName);
-				
-				} );
-				
-				$( ":mobile-pagecontainer" ).pagecontainer( "change", "#home");
-				
-				
-		};
-
-			
+		};*/			
 
 	</script>
 
