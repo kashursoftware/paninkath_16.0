@@ -54,7 +54,7 @@
 
 		$(document).on("pagecreate","#login",function(){
 			   
-			  // $("#doneBtn").on("click",registerUser);
+			   $("#doneBtn").on("click",registerUser);
 			   $("#loginBtn").on("click",loginUser);
 		});
 		function onDeviceReady(){
@@ -92,7 +92,26 @@
 				type: "get", //send it through get method
 				data:{"uName":$("#uName").val(),"pwd":$("#uPwd").val()},
 				success: function(response) {
-					console.log("sent......");
+					window.localStorage.setItem("token", response.token);
+					trial();
+				},
+				error: function(xhr) {
+					console.log(xhr);
+				}
+			});
+			
+		};
+		
+		function trial(){
+			
+			$.ajax({
+				url : "http://vps.hilfe.website:3800/welcomeUser",
+				type: "get",
+				headers: {
+				'X-Auth-Token' : window.localStorage.getItem("token")
+				}, 
+				success: function(response) {
+					console.log("Token Sent...");
 				},
 				error: function(xhr) {
 					console.log(xhr);
