@@ -92,8 +92,10 @@
 				type: "get", //send it through get method
 				data:{"uName":$("#uName").val(),"pwd":$("#uPwd").val()},
 				success: function(response) {
-					window.localStorage.setItem("token", response.token);
-					trial();
+					//window.localStorage.setItem("token", response.token);
+					//trial();
+					
+					onLoginSuccess(response);
 				},
 				error: function(xhr) {
 					console.log(xhr);
@@ -137,9 +139,23 @@
 
 		}
 
-		function onLoginSuccess(){
+		function onLoginSuccess(response){
 		
+				/*console.log(($("#welmsg")));
+				console.log(response.user.uName);
+				
 				$.mobile.changePage( "#home", { transition: "slide", changeHash: false });
+				$("#welmsg").text(response.user.uName);*/
+				
+				$( ":mobile-pagecontainer" ).on( "pagecontainerbeforechange", function( event, ui ) {
+				
+						var obj = jQuery.parseJSON(response.user);
+						$("#welmsg").text("Welcome to Paninkath "+obj.uName);
+				
+				} );
+				
+				$( ":mobile-pagecontainer" ).pagecontainer( "change", "#home");
+				
 				
 		};
 
@@ -216,7 +232,7 @@
 				<h1><b>PaninKath...</b></h1>
 		    </div>
 		   <div data-role="main" class="ui-content">
-			<h1> Coming Soon...</h1>
+			<h1 id="welmsg"> Successfully Logged In</h1>
 		   </div>
 	</div>
 
