@@ -47,8 +47,11 @@
 	<link rel="stylesheet" href="js/libs/jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.css">
 	<script src="js/libs/jquery.mobile-1.4.5/jquery-1.11.3.min.js"></script>
 	<script src="js/libs/jquery.mobile-1.4.5/jquery.mobile-1.4.5.js"></script>
+	<script src="js/libs/validator/dist/jquery.validate.js"></script>
 	<script src="js/com/reg.js"></script>
 	<script src="js/com/login.js"></script>
+	<script src="js/util/validationRules.js"></script>
+	
 	
 
 	<script>
@@ -60,6 +63,12 @@
 			  $("#doneBtn").on("click",registerUser);
 			  $("#loginBtn").on("click",loginUser);
 		});
+		
+		$(document).on("pagecreate","#signUp1",function(){
+			   
+			 validateSignUp1();
+		});
+		
 		function onDeviceReady(){
 		
 			$("#fbLogin").on("tap",onFBLogin);
@@ -125,10 +134,10 @@
 				<h1><b>PaninKath...</b></h1>
 		    </div>
 		   <div data-role="main" class="ui-content">
-		     <form method="post" action="demoform.asp">
-				<input id="fName" type="text" name="fname" id="fname" placeHolder="First Name">
-				<input id="lName" type="text" name="lname" id="lname" placeHolder="Last Name">
-				<input id="uEmail" type="email" name="uemail" id="uemail" placeHolder="email">
+		     <form id="signUpForm1" method="post" action="demoform.asp">
+				<input id="fName" type="text" name="fName" placeHolder="First Name"/>
+				<input id="lName" type="text" name="lName" placeHolder="Last Name"/>
+				<input id="uEmail" type="email" name="uEmail" placeHolder="email"/>
 			 </form>
 
 	         <a href="#login" data-role="button" class="button" data-transition="slide" data-direction="reverse" data-inline="true" changeHash="false">Back</a> 
