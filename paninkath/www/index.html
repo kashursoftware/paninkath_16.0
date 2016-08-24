@@ -48,6 +48,8 @@
 	<script src="js/libs/jquery.mobile-1.4.5/jquery-1.11.3.min.js"></script>
 	<script src="js/libs/jquery.mobile-1.4.5/jquery.mobile-1.4.5.js"></script>
 	<script src="js/libs/validator/dist/jquery.validate.js"></script>
+	<script src="js/libs/tooltipster/dist/js/tooltipster.bundle.js"></script>
+	<link rel="stylesheet" type="text/css" href="js/libs/tooltipster/dist/css/tooltipster.bundle.css" />
 	<script src="js/com/reg.js"></script>
 	<script src="js/com/login.js"></script>
 	<script src="js/util/validationRules.js"></script>
@@ -66,6 +68,13 @@
 		
 		$(document).on("pagecreate","#signUp1",function(){
 			   
+			// initialize tooltipster on form input elements
+			$('#signUpForm1 input').tooltipster({ 
+				trigger: 'custom', // default is 'hover' which is no good here
+				onlyOne: false,    // allow multiple tips to be open at a time
+				position: 'left',  // display the tips to the right of the element
+			});
+	
 			 validateSignUp1();
 		});
 		
@@ -135,9 +144,9 @@
 		    </div>
 		   <div data-role="main" class="ui-content">
 		     <form id="signUpForm1" method="post" action="demoform.asp">
-				<input id="fName" type="text" name="fName" placeHolder="First Name"/>
-				<input id="lName" type="text" name="lName" placeHolder="Last Name"/>
-				<input id="uEmail" type="email" name="uEmail" placeHolder="email"/>
+				<input id="fName" type="text" name="fName" placeHolder="First Name" title="sample...."/>
+				<input id="lName" type="text" name="lName" placeHolder="Last Name" title="sample...."/>
+				<input id="uEmail" type="email" name="uEmail" placeHolder="email" title="sample...."/>
 			 </form>
 
 	         <a href="#login" data-role="button" class="button" data-transition="slide" data-direction="reverse" data-inline="true" changeHash="false">Back</a> 

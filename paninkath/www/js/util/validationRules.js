@@ -16,19 +16,20 @@ function validateSignUp1(){
 			fName: "Please enter your firstname",
 			lName: "Please enter your lastname",
 			uEmail: "Please enter a valid email address"
-		}/*,
-		
-		errorPlacement: function (error, element) {
+		},errorPlacement: function (error, element) {
             var lastError = $(element).data('lastError'),
                 newError = $(error).text();
 
             $(element).data('lastError', newError);
 
-            if(newError !== ''){
+            if(newError !== '' && newError !== lastError){
                 $(element).tooltipster('content', newError);
                 $(element).tooltipster('show');
             }
-        }*/
+        },
+        success: function (label, element) {
+            $(element).tooltipster('hide');
+        }
 	});
 	
 	
