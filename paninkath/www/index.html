@@ -38,18 +38,14 @@
 	 
 	 <!--<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; script-src 'self' http://vps.hilfe.website 'unsafe-inline' 'unsafe-eval';  media-src *">-->
 	 <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; connect-src http://vps.hilfe.website:3800">
-
-
-	 
-
     <link rel="stylesheet" type="text/css" href="css/index.css" />
-    <title>Hello World</title>
 	<link rel="stylesheet" href="js/libs/jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.css">
 	<script src="js/libs/jquery.mobile-1.4.5/jquery-1.11.3.min.js"></script>
 	<script src="js/libs/jquery.mobile-1.4.5/jquery.mobile-1.4.5.js"></script>
 	<script src="js/libs/validator/dist/jquery.validate.js"></script>
 	<script src="js/libs/tooltipster/dist/js/tooltipster.bundle.js"></script>
-	<link rel="stylesheet" type="text/css" href="js/libs/tooltipster/dist/css/tooltipster.bundle.css" />
+	<link rel="stylesheet" type="text/css" href="js/libs/tooltipster/dist/css/tooltipster.bundle.css" />	
+	<!--<link rel="stylesheet" type="text/css" href="js/libs/tooltipster/dist/css/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-shadow.min" />-->
 	<script src="js/com/reg.js"></script>
 	<script src="js/com/login.js"></script>
 	<script src="js/util/validationRules.js"></script>
@@ -70,12 +66,20 @@
 			   
 			// initialize tooltipster on form input elements
 			$('#signUpForm1 input').tooltipster({ 
+				touchDevices: true,
 				trigger: 'custom', // default is 'hover' which is no good here
 				onlyOne: false,    // allow multiple tips to be open at a time
-				position: 'left',  // display the tips to the right of the element
+				position: 'bottom',  // display the tips to the right of the element
+				//theme: '.tooltipster-shadow'				
+    
 			});
 	
 			 validateSignUp1();
+		});
+		
+		$(document).on("pagecreate","#signUp2",function(){
+			   
+			 validateSignUp2();
 		});
 		
 		function onDeviceReady(){
@@ -143,10 +147,10 @@
 				<h1><b>PaninKath...</b></h1>
 		    </div>
 		   <div data-role="main" class="ui-content">
-		     <form id="signUpForm1" method="post" action="demoform.asp">
-				<input id="fName" type="text" name="fName" placeHolder="First Name" title="sample...."/>
-				<input id="lName" type="text" name="lName" placeHolder="Last Name" title="sample...."/>
-				<input id="uEmail" type="email" name="uEmail" placeHolder="email" title="sample...."/>
+		     <form id="signUpForm1" method="post" action="demoform.asp" class="signUpForm">
+				<input id="fName" type="text" name="fName" placeHolder="First Name"/>
+				<input id="lName" type="text" name="lName" placeHolder="Last Name" />
+				<input id="uEmail" type="email" name="uEmail" placeHolder="email" />
 			 </form>
 
 	         <a href="#login" data-role="button" class="button" data-transition="slide" data-direction="reverse" data-inline="true" changeHash="false">Back</a> 
@@ -155,15 +159,15 @@
 		   </div>
 	</div>
 
-	<div id="signUp2" class="signUp" data-role="page">
+	<div id="signUp2" class="signUp" data-role="page" class="signUpForm">
 			<div data-role="header">
 				<h1><b>PaninKath...</b></h1>
 		    </div>
 		   <div data-role="main" class="ui-content">
-		     <form method="post" action="demoform.asp">
-				<input id="nUName" type="text" name="uname" id="uname" placeHolder="User Name">
-				<input id="nUPwd" type="password" name="pwd" id="upwd" placeHolder="Password">
-				<input id="nUCPwd" type="password" name="cpwd" id="cupwd" placeHolder="Confirm Password">
+		     <form id="signUpForm2" method="post" action="demoform.asp" class="form">
+				<input id="nUName" type="text" name="nUName" placeHolder="User Name">
+				<input id="nUPwd" type="password" name="nUPwd" placeHolder="Password">
+				<input id="nUCPwd" type="password" name="nUCPwd" placeHolder="Confirm Password">
 			 </form>
 
 			 <a href="#signUp1" data-role="button" class="button" data-transition="slide" data-direction="reverse" data-inline="true" changeHash="false">Back</a> <!--data-inline="true" -->

@@ -38,15 +38,20 @@
 	 
 	 <!--<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; script-src 'self' http://vps.hilfe.website 'unsafe-inline' 'unsafe-eval';  media-src *">-->
 	 <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; connect-src http://vps.hilfe.website:3800">
-
-
-	 
-
-    <link rel="stylesheet" type="text/css" href="css/index.css" />
-    <title>Hello World</title>
+    
 	<link rel="stylesheet" href="js/libs/jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.css">
 	<script src="js/libs/jquery.mobile-1.4.5/jquery-1.11.3.min.js"></script>
 	<script src="js/libs/jquery.mobile-1.4.5/jquery.mobile-1.4.5.js"></script>
+	<script src="js/libs/validator/dist/jquery.validate.js"></script>
+	<script src="js/libs/tooltipster/dist/js/tooltipster.bundle.js"></script>
+	<link rel="stylesheet" type="text/css" href="js/libs/tooltipster/dist/css/tooltipster.bundle.css" />
+	<link rel="stylesheet" type="text/css" href="css/index.css" />
+	<!--<link rel="stylesheet" type="text/css" href="js/libs/tooltipster/dist/css/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-shadow.min" />-->
+	<script src="js/com/reg.js"></script>
+	<script src="js/com/login.js"></script>
+	<script src="js/util/validationRules.js"></script>
+	
+	
 
 	<script>
 		document.addEventListener("deviceready", onDeviceReady, false);
@@ -54,9 +59,30 @@
 
 		$(document).on("pagecreate","#login",function(){
 			   
-			  // $("#doneBtn").on("click",registerUser);
-			  // $("#loginBtn").on("click",loginUser);
+			  $("#doneBtn").on("click",registerUser);
+			  $("#loginBtn").on("click",loginUser);
 		});
+		
+		$(document).on("pagecreate","#signUp1",function(){
+			   
+			// initialize tooltipster on form input elements
+			$('#signUpForm1 input').tooltipster({ 
+				touchDevices: true,
+				trigger: 'custom', // default is 'hover' which is no good here
+				onlyOne: false,    // allow multiple tips to be open at a time
+				position: 'bottom',  // display the tips to the right of the element
+				//theme: '.tooltipster-shadow'				
+    
+			});
+	
+			 validateSignUp1();
+		});
+		
+		$(document).on("pagecreate","#signUp2",function(){
+			   
+			 validateSignUp2();
+		});
+		
 		function onDeviceReady(){
 		
 			$("#fbLogin").on("tap",onFBLogin);
@@ -66,45 +92,9 @@
 			$("#loginBtn").on("tap",loginUser);
 			
 
-		}
+		}	
 		
-		function registerUser(){
-		
-			
-			$.ajax({
-				url: "http://vps.hilfe.website:3800/addUser",
-				type: "get", //send it through get method
-				data:{"fName":$("#fName").val(),"lName": $("#lName").val() , "email":$("#uEmail").val(),"userName":$("#nUName").val(),"passWord":$("#nUPwd").val(),"cPassWord":$("#nUCPwd").val()},
-				success: function(response) {
-					console.log("sent......");
-				},
-				error: function(xhr) {
-					console.log(xhr);
-				}
-			});
-				
-		};
-		
-		function loginUser(){
-		
-			$.ajax({
-				url: "http://vps.hilfe.website:3800/loginUser",
-				type: "get", //send it through get method
-				data:{"uName":$("#uName").val(),"pwd":$("#uPwd").val()},
-				success: function(response) {
-					//window.localStorage.setItem("token", response.token);
-					//trial();
-					
-					onLoginSuccess(response);
-				},
-				error: function(xhr) {
-					console.log(xhr);
-				}
-			});
-			
-		};
-		
-		function trial(){
+		/*function trial(){
 			
 			$.ajax({
 				url : "http://vps.hilfe.website:3800/welcomeUser",
@@ -120,46 +110,7 @@
 				}
 			});
 			
-		};
-
-		function onFBLogin(){
-		
-			var fbLoginSuccess = function (userData) {
-			    //alert("UserInfo: " + JSON.stringify(userData));
-				onLoginSuccess();
-			}
-
-			facebookConnectPlugin.login(["public_profile"],
-			    fbLoginSuccess,
-			    function (error) { 
-					
-					alert("" + error) 
-				}
-			);
-
-		}
-
-		function onLoginSuccess(response){
-		
-				/*console.log(($("#welmsg")));
-				console.log(response.user.uName);
-				
-				$.mobile.changePage( "#home", { transition: "slide", changeHash: false });
-				$("#welmsg").text(response.user.uName);*/
-				
-				$( ":mobile-pagecontainer" ).on( "pagecontainerbeforechange", function( event, ui ) {
-				
-						var obj = jQuery.parseJSON(response.user);
-						$("#welmsg").text("Welcome to Paninkath "+obj.uName);
-				
-				} );
-				
-				$( ":mobile-pagecontainer" ).pagecontainer( "change", "#home");
-				
-				
-		};
-
-			
+		};*/			
 
 	</script>
 
@@ -197,10 +148,10 @@
 				<h1><b>PaninKath...</b></h1>
 		    </div>
 		   <div data-role="main" class="ui-content">
-		     <form method="post" action="demoform.asp">
-				<input id="fName" type="text" name="fname" id="fname" placeHolder="First Name">
-				<input id="lName" type="text" name="lname" id="lname" placeHolder="Last Name">
-				<input id="uEmail" type="email" name="uemail" id="uemail" placeHolder="email">
+		     <form id="signUpForm1" method="post" action="demoform.asp" class="signUpForm">
+				<input id="fName" type="text" name="fName" placeHolder="First Name"/>
+				<input id="lName" type="text" name="lName" placeHolder="Last Name" />
+				<input id="uEmail" type="email" name="uEmail" placeHolder="email" />
 			 </form>
 
 	         <a href="#login" data-role="button" class="button" data-transition="slide" data-direction="reverse" data-inline="true" changeHash="false">Back</a> 
@@ -209,15 +160,15 @@
 		   </div>
 	</div>
 
-	<div id="signUp2" class="signUp" data-role="page">
+	<div id="signUp2" class="signUp" data-role="page" class="signUpForm">
 			<div data-role="header">
 				<h1><b>PaninKath...</b></h1>
 		    </div>
 		   <div data-role="main" class="ui-content">
-		     <form method="post" action="demoform.asp">
-				<input id="nUName" type="text" name="uname" id="uname" placeHolder="User Name">
-				<input id="nUPwd" type="password" name="pwd" id="upwd" placeHolder="Password">
-				<input id="nUCPwd" type="password" name="cpwd" id="cupwd" placeHolder="Confirm Password">
+		     <form id="signUpForm2" method="post" action="demoform.asp" class="form">
+				<input id="nUName" type="text" name="nUName" placeHolder="User Name">
+				<input id="nUPwd" type="password" name="nUPwd" placeHolder="Password">
+				<input id="nUCPwd" type="password" name="nUCPwd" placeHolder="Confirm Password">
 			 </form>
 
 			 <a href="#signUp1" data-role="button" class="button" data-transition="slide" data-direction="reverse" data-inline="true" changeHash="false">Back</a> <!--data-inline="true" -->
