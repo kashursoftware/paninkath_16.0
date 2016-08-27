@@ -48,7 +48,9 @@
 	<!--<link rel="stylesheet" type="text/css" href="js/libs/tooltipster/dist/css/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-shadow.min" />-->
 	<script src="js/com/reg.js"></script>
 	<script src="js/com/login.js"></script>
-	<script src="js/util/validationRules.js"></script>
+	<script src="js/util/validation/validationManager.js"></script>
+	<script src="js/util/validation/validationRules.js"></script>
+	
 	
 	
 
@@ -58,14 +60,50 @@
 
 		$(document).on("pagecreate","#login",function(){
 			   
-			  $("#doneBtn").on("click",registerUser);
-			  $("#loginBtn").on("click",loginUser);
+			  $("#doneBtn").on("tap",registerUser);
+			  $("#loginBtn").on("tap",loginUser);
+			  
+			  autoLogin();
+			  
+		});
+		
+				
+		$(document).on( "pageshow","#login" ,function( event, ui ) {
+
+			$('#signUpForm1').find("input").val("");
+			$('#signUpForm2').find("input").val("");
+			$('#loginForm').find("input").val("");
+			
+			
+		});
+		
+		$(document).on( "pageshow","#home" ,function( event, ui ) {
+			$("#logoutLink").on("tap",logoutUser);			
 		});
 		
 		$(document).on("pagecreate","#signUp1",function(){
+		
+			initializeToolipsterOnForm($('#signUpForm1 input'));
+	
+			validateSignUp1();
+			
+			enableLinkButton($("#next1"));
+		});
+		
+		$(document).on("pagecreate","#signUp2",function(){
 			   
+			 initializeToolipsterOnForm($('#signUpForm2 input'));
+			 validateSignUp2();
+			 enableLinkButton($("#doneBtn"));
+			
+
+		});
+		
+		function initializeToolipsterOnForm(elements){
+			
 			// initialize tooltipster on form input elements
-			$('#signUpForm1 input').tooltipster({ 
+			elements.tooltipster({ 
+				'interactive': true,
 				touchDevices: true,
 				trigger: 'custom', // default is 'hover' which is no good here
 				onlyOne: false,    // allow multiple tips to be open at a time
@@ -73,14 +111,8 @@
 				//theme: '.tooltipster-shadow'				
     
 			});
-	
-			 validateSignUp1();
-		});
 		
-		$(document).on("pagecreate","#signUp2",function(){
-			   
-			 validateSignUp2();
-		});
+		};
 		
 		function onDeviceReady(){
 		
@@ -128,7 +160,7 @@
 				<h1><b>PaninKath...</b></h1>
 		    </div>
 		   <div data-role="main" class="ui-content">
-		     <form method="post" action="demoform.asp">
+		     <form id="loginForm" method="post" action="demoform.asp">
 				<input id="uName" type="text" name="uname" id="uname" placeHolder="User Name">
 				<input id="uPwd" type="password" name="pwd" id="pwd" placeHolder="Password">
 				<a id="loginBtn" data-role="button"  data-transition="slide" data-direction="forward" changeHash="false">Login</a><!--class="button ui-disabled"-->
@@ -154,7 +186,7 @@
 			 </form>
 
 	         <a href="#login" data-role="button" class="button" data-transition="slide" data-direction="reverse" data-inline="true" changeHash="false">Back</a> 
-			 <a href="#signUp2" data-role="button" class="button" data-transition="slide" data-direction="forward" data-inline="true" changeHash="false">Next</a>
+			 <a id="next1" href="#signUp2" data-role="button" class="button" tabIndex="-1" data-transition="slide" data-direction="forward" data-inline="true" changeHash="false" enabled="false">Next</a>
 			 
 		   </div>
 	</div>
@@ -183,6 +215,7 @@
 		    </div>
 		   <div data-role="main" class="ui-content">
 			<h1 id="welmsg"> Successfully Logged In</h1>
+			<a id="logoutLink">logout</a>
 		   </div>
 	</div>
 

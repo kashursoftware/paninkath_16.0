@@ -5,7 +5,7 @@ function loginUser(){
 		type: "get", //send it through get method
 		data:{"uName":$("#uName").val(),"pwd":$("#uPwd").val()},
 		success: function(response) {
-			//window.localStorage.setItem("token", response.token);
+			window.localStorage.setItem("token", response.token);
 			//trial();
 			
 			onLoginSuccess(response);
@@ -44,4 +44,33 @@ function onLoginSuccess(response){
 		
 	$( ":mobile-pagecontainer" ).pagecontainer( "change", "#home");
 		
+};
+
+function autoLogin(){
+	
+	if(window.localStorage.getItem("token") === null){
+		
+		return;
+	}
+	
+	$.ajax({
+		url : "http://vps.hilfe.website:3800/welcomeUser",
+		type: "get",
+		headers: {
+		'X-Auth-Token' : window.localStorage.getItem("token")
+		}, 
+		success: function(response) {
+			$( ":mobile-pagecontainer" ).pagecontainer( "change", "#home");
+		},
+		error: function(xhr) {
+			console.log(xhr);
+		}
+	});
+	
+};
+
+function logoutUser(){
+	
+	window.localStorage.removeItem("token");
+	$( ":mobile-pagecontainer" ).pagecontainer( "change", "#login");
 };

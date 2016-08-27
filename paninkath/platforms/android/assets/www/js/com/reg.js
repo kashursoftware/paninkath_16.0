@@ -1,5 +1,4 @@
 function registerUser(){
-
 	
 	$.ajax({
 		url: "http://vps.hilfe.website:3800/addUser",
