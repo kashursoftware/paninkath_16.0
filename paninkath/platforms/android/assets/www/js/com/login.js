@@ -1,4 +1,6 @@
 function loginUser(){
+	
+	destroyToken();
 
 	$.ajax({
 		url: "http://vps.hilfe.website:3800/loginUser",
@@ -48,7 +50,7 @@ function onLoginSuccess(response){
 
 function autoLogin(){
 	
-	if(window.localStorage.getItem("token") === null){
+	if(getToken() === null){
 		
 		return;
 	}
@@ -57,7 +59,7 @@ function autoLogin(){
 		url : "http://vps.hilfe.website:3800/welcomeUser",
 		type: "get",
 		headers: {
-		'X-Auth-Token' : window.localStorage.getItem("token")
+		'X-Auth-Token' : getToken()
 		}, 
 		success: function(response) {
 			$( ":mobile-pagecontainer" ).pagecontainer( "change", "#home");
@@ -69,8 +71,29 @@ function autoLogin(){
 	
 };
 
-function logoutUser(){
+function isUserLoggedIn(){
+	
+	if(getToken() !== null){
+		
+		return true;
+	}
+	
+	return false;
+};
+
+function getToken(){
+	
+	return window.localStorage.getItem("token");
+	
+};
+
+function destroyToken(){
 	
 	window.localStorage.removeItem("token");
+};
+
+function logoutUser(){
+	
+	destroyToken();
 	$( ":mobile-pagecontainer" ).pagecontainer( "change", "#login");
 };

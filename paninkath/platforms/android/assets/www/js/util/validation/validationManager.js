@@ -38,6 +38,8 @@ function updateValidationStatus(config){
 	
 	enableLinkButton(linkButton, true);
 	
+	
+	
 }
 
 function enableLinkButton(linkButton, isEnabled){
@@ -56,4 +58,35 @@ function enableLinkButton(linkButton, isEnabled){
 	}
 	
 };
+
+/*function checkUNameAvailability(){
+	
+	var that = this;
+	
+	if($("#nUName").val().length < 2){
+		
+		return;
+		
+	}
+	$.ajax({
+		url: "http://vps.hilfe.website:3800/checkUserNameAvailability",
+		type: "get", //send it through get method
+		data:{"userName":$("#nUName").val()},
+		success: function(response) {
+			console.log("Available......");
+			that._isUserNameAvailable = true;
+			$("#nUName").removeClass("invalid-value-midtier");
+		},
+		error: function(xhr) {
+			console.log(xhr);
+			that._isUserNameAvailable = false;
+			$("#nUName").tooltipster('content', "User name already taken");
+            $("#nUName").tooltipster('show');
+			$("#nUName").addClass("invalid-value-midtier");
+		}
+	});
+	
+};*/
+
+
 

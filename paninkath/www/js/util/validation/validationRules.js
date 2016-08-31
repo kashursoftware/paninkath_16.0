@@ -2,7 +2,7 @@ function validateSignUp1(){
 	
 	jQuery.validator.addMethod("lettersonly", function(value, element) {
 		return this.optional(element) || /^[a-z]+$/i.test(value);
-	}, "Letters only please"); 
+	}, "Letters only please");
 
 	$("#signUpForm1").validate({
 		
@@ -27,12 +27,14 @@ function validateSignUp1(){
 			fName: {
 				
 				required: true,
-				lettersonly: true
+				lettersonly: true,
+				minlength: 2
 			},
 			lName: {
 				
 				required: true,
-				lettersonly: true
+				lettersonly: true,
+				minlength: 2
 			},
 			uEmail: {
 				required: true,
@@ -41,13 +43,16 @@ function validateSignUp1(){
 		},
 		messages: {
 			fName: {
-				required: "First name please..."
+				required: "enter first name",
+				minlength: "First name is too short"
 			},
 			lName: {
-				required: "Last name please..."
+				required: "enter last name",
+				minlength: "Last name is too short"
 			},
 			uEmail: {
-				required: "email Id please..."
+				required: "enter emailid ",
+				email: "Invalid email"
 			
 			}
 		},errorPlacement: function (error, element) {
@@ -88,6 +93,30 @@ function validateSignUp1(){
 
 function validateSignUp2(){
 	
+	jQuery.validator.addMethod("userAvailability", function(value, element) {
+		
+		var isSuccess = false;
+		
+		$.ajax({
+			url: "http://vps.hilfe.website:3800/checkUserNameAvailability",
+			type: "get", //send it through get method
+			data:{"userName":$(element).val()},
+			async: false,
+			success: function(response) {
+				console.log("User name available");
+				isSuccess = true;
+			},
+			error: function(xhr) {
+				isSuccess = false;
+				console.log("User name not available");
+				console.log(xhr);
+			}
+		});
+		
+		return isSuccess;
+		
+
+	}, "User name already taken"); 
 		
 	$("#signUpForm2").validate({
 		
@@ -108,7 +137,8 @@ function validateSignUp2(){
 		rules: {
 			nUName: {
 				required: true,
-				minlength: 2
+				minlength: 2,
+				userAvailability: true
 			},
 			nUPwd: {
 				required: true,
@@ -116,23 +146,21 @@ function validateSignUp2(){
 			},
 			nUCPwd: {
 				required: true,
-				minlength: 5,
 				equalTo: "#nUPwd"
 			}
 		},
 		messages: {
 			nUName: {
-				required: "User name please...",
-				minlength: "Your username must consist of at least 2 characters"
+				required: "Enter user name",
+				minlength: "User name is too short"
 			},
 			nUPwd: {
-				required: "Password please...",
-				minlength: "Your password must be at least 5 characters long"
+				required: "Enter Password",
+				minlength: "Atleast 5 characters"
 			},
 			nUCPwd: {
-				required: "Confirm your password please",
-				minlength: "Your password must be at least 5 characters long",
-				equalTo: "Password and confirm password must match"
+				required: "Confirm password",
+				equalTo: "Passwords don't match"
 			}
 		},errorPlacement: function (error, element) {
 			

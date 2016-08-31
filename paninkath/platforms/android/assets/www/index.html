@@ -55,6 +55,8 @@
 	
 
 	<script>
+	
+		var that = this;
 		document.addEventListener("deviceready", onDeviceReady, false);
 
 
@@ -66,6 +68,18 @@
 			  autoLogin();
 			  
 		});
+		
+		$(document).on("pagebeforeshow","#login",function(event,data){
+		
+			if( (isUserLoggedIn()) && (data.prevPage.attr("id") === "home")){
+				
+				$("#login").hide();
+				navigator.app.exitApp();
+			}
+		
+		});
+		
+
 		
 				
 		$(document).on( "pageshow","#login" ,function( event, ui ) {
@@ -95,6 +109,10 @@
 			 initializeToolipsterOnForm($('#signUpForm2 input'));
 			 validateSignUp2();
 			 enableLinkButton($("#doneBtn"));
+			 
+			 //$("#nUName").on("keyup",$.proxy(checkUNameAvailability,that));
+			// $("#nUName").on("focusin",$.proxy(checkUNameAvailability,that));
+			 
 			
 
 		});
@@ -107,8 +125,17 @@
 				touchDevices: true,
 				trigger: 'custom', // default is 'hover' which is no good here
 				onlyOne: false,    // allow multiple tips to be open at a time
-				position: 'bottom',  // display the tips to the right of the element
-				//theme: '.tooltipster-shadow'				
+				side: "top",  // display the tips to the right of the element
+				distance: 0,
+				functionPosition: function(instance, helper, position){
+					
+					if(helper.geo.origin.size.width > position.size.width){
+						position.coord.left = Math.abs(helper.geo.origin.size.width - position.size.width) + 18;
+					}
+					
+					//position.side = "top"
+					return position;
+				}
     
 			});
 		
@@ -121,8 +148,7 @@
 			$("#doneBtn").on("tap",registerUser);			
 			
 			$("#loginBtn").on("tap",loginUser);
-			
-
+				
 		}	
 		
 		/*function trial(){
