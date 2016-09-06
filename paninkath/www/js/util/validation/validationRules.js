@@ -37,22 +37,33 @@ function validateSignUp1(){
 				minlength: 2
 			},
 			uEmail: {
-				required: true,
+				required: false,
 				email: true
+			},
+			uMobile: {
+				required: true,
+				number: true,
+				minlength: 10
 			}
 		},
 		messages: {
 			fName: {
-				required: "enter first name",
+				required: "Enter first name",
 				minlength: "First name is too short"
 			},
 			lName: {
-				required: "enter last name",
+				required: "Enter last name",
 				minlength: "Last name is too short"
 			},
 			uEmail: {
-				required: "enter emailid ",
+				required: "Enter emailid ",
 				email: "Invalid email"
+			
+			},
+			uMobile: {
+				required: "Enter mobile number ",
+				number: "Enter only numbers",
+				minlength: "Enter 10 digit number"
 			
 			}
 		},errorPlacement: function (error, element) {
@@ -155,7 +166,7 @@ function validateSignUp2(){
 				minlength: "User name is too short"
 			},
 			nUPwd: {
-				required: "Enter Password",
+				required: "Enter password",
 				minlength: "Atleast 5 characters"
 			},
 			nUCPwd: {

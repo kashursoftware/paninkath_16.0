@@ -34,10 +34,9 @@
         * Enable eval(): add 'unsafe-eval' to default-src
     * Create your own at http://cspisawesome.com
     -->
-     <!--<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: 'unsafe-inline' https://ssl.gstatic.com; style-src 'self' 'unsafe-inline';script-src 'self' http://119.18.52.6:3800 'unsafe-inline' 'unsafe-eval'; media-src *" />-->
-	 
-	 <!--<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; script-src 'self' http://vps.hilfe.website 'unsafe-inline' 'unsafe-eval';  media-src *">-->
-	 <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; connect-src http://vps.hilfe.website:3800">
+	<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; connect-src http://vps.hilfe.website:3800">
+    <!--<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; connect-src http://vps.hilfe.website:3800 https://2factor.in">-->
+	<!--<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; connect-src https://2factor.in">-->
     <link rel="stylesheet" type="text/css" href="css/index.css" />
 	<link rel="stylesheet" href="js/libs/jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.css">
 	<script src="js/libs/jquery.mobile-1.4.5/jquery-1.11.3.min.js"></script>
@@ -97,6 +96,11 @@
 		
 		$(document).on("pagecreate","#signUp1",function(){
 		
+			$("#verifyMobile").on("tap",$.proxy(verifyNumber,that));//
+			$("#verifyCode").on("tap",$.proxy(validateCode,that));
+			
+			
+		
 			initializeToolipsterOnForm($('#signUpForm1 input'));
 	
 			validateSignUp1();
@@ -109,6 +113,7 @@
 			 initializeToolipsterOnForm($('#signUpForm2 input'));
 			 validateSignUp2();
 			 enableLinkButton($("#doneBtn"));
+			 $("#doneBtn").on("tap",registerUser);
 			 
 			 //$("#nUName").on("keyup",$.proxy(checkUNameAvailability,that));
 			// $("#nUName").on("focusin",$.proxy(checkUNameAvailability,that));
@@ -144,9 +149,6 @@
 		function onDeviceReady(){
 		
 			$("#fbLogin").on("tap",onFBLogin);
-			
-			$("#doneBtn").on("tap",registerUser);			
-			
 			$("#loginBtn").on("tap",loginUser);
 				
 		}	
@@ -205,10 +207,22 @@
 				<h1><b>PaninKath...</b></h1>
 		    </div>
 		   <div data-role="main" class="ui-content">
-		     <form id="signUpForm1" method="post" action="demoform.asp" class="signUpForm">
+		     <form id="signUpForm1" method="post" class="signUpForm">
 				<input id="fName" type="text" name="fName" placeHolder="First Name"/>
 				<input id="lName" type="text" name="lName" placeHolder="Last Name" />
 				<input id="uEmail" type="email" name="uEmail" placeHolder="email" />
+				<input id="uMobile" type="number" name="uMobile" placeHolder="Mobile Number" />
+				<a id="verifyMobile"data-role="button" class="button" data-inline="true" changeHash="false">Verify Number</a>
+				<input id="vCode" type="number" name="vCode" placeHolder="Enter verification code" />
+				<a id="verifyCode"data-role="button" class="button" data-inline="true" changeHash="false">Verify Code</a>
+				<!--s<fieldset class="ui-grid-a">
+					<div class="ui-block-a" style="width:80%">
+						<input id="uMobile" type="number" name="uMobile" placeHolder="Mobile Number" />
+					</div>
+					<div class="ui-block-b" style="width:20%;">
+						<button id="verifyMobile">verify</button>
+					</div>
+				</fieldset>-->
 			 </form>
 
 	         <a href="#login" data-role="button" class="button" data-transition="slide" data-direction="reverse" data-inline="true" changeHash="false">Back</a> 

@@ -4,7 +4,8 @@ var _validationStatus = {
 		
 		fName:false,
 		lName:false,
-		uEmail: false
+		uEmail: false,
+		uMobile: false
 	},
 	
 	signUp2: {

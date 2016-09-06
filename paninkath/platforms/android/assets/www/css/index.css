@@ -142,31 +142,6 @@ h1 {
    opacity:0.7;
 }
 
-.invalid-value-midtier{
-	
-	box-shadow: 0 0 3px #CC0000;
-	
-}
-
-.invalid-value-midtier::-webkit-input-placeholder {
-   color: red;
-   opacity:0.7;
-}
-
-.invalid-value-midtier:-moz-placeholder { /* Firefox 18- */
-   color: red;  
-   opacity:0.7;
-}
-
-.invalid-value-midtier::-moz-placeholder {  /* Firefox 19+ */
-   color: red;  
-   opacity:0.7;
-}
-
-.invalid-value-midtier:-ms-input-placeholder {  
-   color: red;  
-   opacity:0.7;
-}
 
 .disabledLinkBtn {
 	
