@@ -3,7 +3,7 @@ function registerUser(){
 	$.ajax({
 		url: "http://vps.hilfe.website:3800/addUser",
 		type: "get", //send it through get method
-		data:{"fName":$("#fName").val(),"lName": $("#lName").val() , "email":$("#uEmail").val(),"uMobile":$("#uMobile").val(),"userName":$("#nUName").val(),"passWord":$("#nUPwd").val(),"cPassWord":$("#nUCPwd").val()},
+		data:{"fName":$("#fName").val(),"lName": $("#lName").val(),"nUNumber":$("#nUNumber").val(),"passWord":$("#nUPwd").val(),"cPassWord":$("#nUCPwd").val()},
 		success: function(response) {
 			console.log("sent......");
 		},
@@ -21,7 +21,8 @@ function verifyNumber(){
 	
 	$.ajax({
 		url: "http://vps.hilfe.website:3800/getOTP",
-		type: "get", //send it through get method
+		type: "get", //send it through get method,
+		data:{"phone":$("#nUNumber").val()},
 		success: function(response) {
 			console.log("OTP Request Sent......");
 			that._sId = response.sId;
@@ -43,12 +44,36 @@ function validateCode(){
 		type: "get", //send it through get method
 		data:{"vCode":$("#vCode").val(),"sId":that._sId},
 		success: function(response) {
-			console.log("OTP Request Sent......");
+			console.log("OTP Verified");
+			that.verifiedNumber.numbers.push($("#nUNumber").val());
+			that.verifiedNumber.isNumberVerified = true;
+			$("#signUpForm1").validate().element("#nUNumber");
+			$("#nUNumber").focus();
 		},
 		error: function(xhr) {
 			console.log(xhr);
+			that.verifiedNumber.isNumberVerified = false;
+			$("#nUNumber").focus();
 		}
 	}); 
 	
+	
+	
+	$(this).bind({popupafterclose: function(event, ui) { 
+			
+			$("#nUNumber").focus();			
+			$("#signUpForm1").validate().element("#nUNumber");
+		}
+	});
+	
+	$(this).bind({popupafteropen: function(event, ui) { 
+			
+			$("#vCode").focus();			
+			$("#vCode").val("");
+			
+		}
+	});
+	
+	$("#verifyNumberPopup").popup( "close" );
 	
 };

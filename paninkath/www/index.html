@@ -61,8 +61,21 @@
 
 		$(document).on("pagecreate","#login",function(){
 			   
-			  $("#doneBtn").on("tap",registerUser);
 			  $("#loginBtn").on("tap",loginUser);
+			  
+			  $("#forgotPassword").on("tap",$.proxy(getTmpPwd,that));
+			  
+			  $("#tmpPwd").on("keyup",function(){
+			
+				if(this.value.length >=6){
+					enableLinkButton($("#verifyTemPwd"),true, $.proxy(verifyTmpPwd,that));
+				}else{
+					enableLinkButton($("#verifyTemPwd"));
+				}
+			
+			  });
+			  
+			  enableLinkButton($("#verifyTemPwd"));
 			  
 			  autoLogin();
 			  
@@ -97,7 +110,16 @@
 		$(document).on("pagecreate","#signUp1",function(){
 		
 			$("#verifyMobile").on("tap",$.proxy(verifyNumber,that));//
-			$("#verifyCode").on("tap",$.proxy(validateCode,that));
+			
+			$("#vCode").on("keyup",function(){
+			
+				if(this.value.length >=6){
+					enableLinkButton($("#verifyCode"),true, $.proxy(validateCode,that));
+				}else{
+					enableLinkButton($("#verifyCode"));
+				}
+			
+			});
 			
 			
 		
@@ -106,6 +128,9 @@
 			validateSignUp1();
 			
 			enableLinkButton($("#next1"));
+			enableLinkButton($("#verifyCode"));
+			
+			$("#verifyMobile").hide();
 		});
 		
 		$(document).on("pagecreate","#signUp2",function(){
@@ -152,24 +177,6 @@
 			$("#loginBtn").on("tap",loginUser);
 				
 		}	
-		
-		/*function trial(){
-			
-			$.ajax({
-				url : "http://vps.hilfe.website:3800/welcomeUser",
-				type: "get",
-				headers: {
-				'X-Auth-Token' : window.localStorage.getItem("token")
-				}, 
-				success: function(response) {
-					console.log("Token Sent...");
-				},
-				error: function(xhr) {
-					console.log(xhr);
-				}
-			});
-			
-		};*/			
 
 	</script>
 
@@ -189,10 +196,23 @@
 		    </div>
 		   <div data-role="main" class="ui-content">
 		     <form id="loginForm" method="post" action="demoform.asp">
-				<input id="uName" type="text" name="uname" id="uname" placeHolder="User Name">
+				<input id="uNumber" type="number" name="uNumber" placeHolder="Registered Mobile Number">
 				<input id="uPwd" type="password" name="pwd" id="pwd" placeHolder="Password">
 				<a id="loginBtn" data-role="button"  data-transition="slide" data-direction="forward" changeHash="false">Login</a><!--class="button ui-disabled"-->
+				<a id="forgotPassword" href="#forgotPassWordPopup" data-rel="popup">Forgot Password</a>
+				
+				<div data-role="popup" id="forgotPassWordPopup" data-overlay-theme="b" data-position-to="window">
+				
+					<div data-role="header"><h1><b>Paninkath</b></h1></div>
+					<br>
+					<p><b>Enter below the temporary password received in SMS:</b></p>
+					<div data-role="main" class="ui-content"><input id="tmpPwd" type="password" name="tmpPwd" placeHolder="Temporary Password" />
+					<a id="verifyTemPwd" data-role="button" class="button" data-inline="true" changeHash="false">Submit</a>
+					</div>
+				  
+				</div>
 			 </form>
+			 
 			 <div id="social" class="social">
 				<a id="fbLogin" href="#login" data-role="button" data-transition="slide" data-direction="forward" changeHash="false">FB</a>
 			 </div>
@@ -208,21 +228,25 @@
 		    </div>
 		   <div data-role="main" class="ui-content">
 		     <form id="signUpForm1" method="post" class="signUpForm">
-				<input id="fName" type="text" name="fName" placeHolder="First Name"/>
-				<input id="lName" type="text" name="lName" placeHolder="Last Name" />
-				<input id="uEmail" type="email" name="uEmail" placeHolder="email" />
-				<input id="uMobile" type="number" name="uMobile" placeHolder="Mobile Number" />
-				<a id="verifyMobile"data-role="button" class="button" data-inline="true" changeHash="false">Verify Number</a>
-				<input id="vCode" type="number" name="vCode" placeHolder="Enter verification code" />
-				<a id="verifyCode"data-role="button" class="button" data-inline="true" changeHash="false">Verify Code</a>
-				<!--s<fieldset class="ui-grid-a">
-					<div class="ui-block-a" style="width:80%">
-						<input id="uMobile" type="number" name="uMobile" placeHolder="Mobile Number" />
+			 	
+				<input id="nUNumber" type="number" name="nUNumber" placeHolder="Mobile Number" />
+				<a id="verifyMobile" href="#verifyNumberPopup" data-rel="popup">Verify Number</a>
+
+				<div data-role="popup" id="verifyNumberPopup" data-overlay-theme="b" data-position-to="window">
+				
+					<div data-role="header"><h1><b>Paninkath</b></h1></div>
+					<br>
+					<p><b>Enter below the code received in SMS:</b></p>
+					<div data-role="main" class="ui-content"><input id="vCode" type="number" name="vCode" placeHolder="Verification code" />
+						<a id="verifyCode" data-role="button" class="button" data-inline="true" changeHash="false">Done</a>
 					</div>
-					<div class="ui-block-b" style="width:20%;">
-						<button id="verifyMobile">verify</button>
-					</div>
-				</fieldset>-->
+					<!--<div data-role="footer"><h1>Footer Text..</h1></div>-->
+				  
+				</div>
+
+				
+				<input id="nUPwd" type="password" name="nUPwd" placeHolder="Password">
+				<input id="nUCPwd" type="password" name="nUCPwd" placeHolder="Confirm Password">
 			 </form>
 
 	         <a href="#login" data-role="button" class="button" data-transition="slide" data-direction="reverse" data-inline="true" changeHash="false">Back</a> 
@@ -237,9 +261,8 @@
 		    </div>
 		   <div data-role="main" class="ui-content">
 		     <form id="signUpForm2" method="post" action="demoform.asp" class="form">
-				<input id="nUName" type="text" name="nUName" placeHolder="User Name">
-				<input id="nUPwd" type="password" name="nUPwd" placeHolder="Password">
-				<input id="nUCPwd" type="password" name="nUCPwd" placeHolder="Confirm Password">
+				<input id="fName" type="text" name="fName" placeHolder="First Name"/>
+				<input id="lName" type="text" name="lName" placeHolder="Last Name" />
 			 </form>
 
 			 <a href="#signUp1" data-role="button" class="button" data-transition="slide" data-direction="reverse" data-inline="true" changeHash="false">Back</a> <!--data-inline="true" -->

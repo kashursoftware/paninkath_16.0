@@ -5,7 +5,7 @@ function loginUser(){
 	$.ajax({
 		url: "http://vps.hilfe.website:3800/loginUser",
 		type: "get", //send it through get method
-		data:{"uName":$("#uName").val(),"pwd":$("#uPwd").val()},
+		data:{"uNumber":$("#uNumber").val(),"pwd":$("#uPwd").val()},
 		success: function(response) {
 			window.localStorage.setItem("token", response.token);
 			//trial();
@@ -40,7 +40,7 @@ function onLoginSuccess(response){
 	$( ":mobile-pagecontainer" ).on( "pagecontainerbeforechange", function( event, ui ) {
 		
 		var obj = jQuery.parseJSON(response.user);
-		$("#welmsg").text("Welcome to Paninkath "+obj.uName);
+		$("#welmsg").text("Welcome to Paninkath "+obj.fName);
 		
 	} );
 		
@@ -56,7 +56,7 @@ function autoLogin(){
 	}
 	
 	$.ajax({
-		url : "http://vps.hilfe.website:3800/welcomeUser",
+		url : "http://vps.hilfe.website:3800/validateLoggedInUser",
 		type: "get",
 		headers: {
 		'X-Auth-Token' : getToken()
@@ -96,4 +96,51 @@ function logoutUser(){
 	
 	destroyToken();
 	$( ":mobile-pagecontainer" ).pagecontainer( "change", "#login");
+};
+
+function getTmpPwd(){
+	
+	var that = this;
+	
+	$.ajax({
+		url: "http://vps.hilfe.website:3800/getTP",
+		type: "get", //send it through get method,
+		data:{"phone":$("#uNumber").val()},
+		success: function(response) {
+			console.log("TP Request Sent......");
+			that._sId = response.sId;
+		},
+		error: function(xhr) {
+			console.log(xhr);
+		}
+	}); 
+	
+	
+};
+
+
+function verifyTmpPwd(){
+	
+	var that = this;
+	
+	$.ajax({
+		url: "http://vps.hilfe.website:3800/validateTP",
+		type: "get", //send it through get method
+		data:{"tmpPwd":$("#tmpPwd").val(),"sId":that._sId},
+		success: function(response) {
+			console.log("OTP Verified");
+			prepareUpdatePassWordAssets();
+		},
+		error: function(xhr) {
+			console.log(xhr);
+		}
+	}); 
+	
+};
+
+function prepareUpdatePassWordAssets(){
+	
+	
+		//To do...
+	
 };

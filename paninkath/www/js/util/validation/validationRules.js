@@ -1,8 +1,46 @@
 function validateSignUp1(){
+		
+	jQuery.validator.addMethod("userAvailability", function(value, element) {
+		
+		var isSuccess = false;
+		
+		$.ajax({
+			url: "http://vps.hilfe.website:3800/checkUserNameAvailability",
+			type: "get", //send it through get method
+			data:{"nUNumber":$(element).val()},
+			async: false,
+			success: function(response) {
+				console.log("User name available");
+				isSuccess = true;
+			},
+			error: function(xhr) {
+				isSuccess = false;
+				console.log("User name not available");
+				console.log(xhr);
+			}
+		});
+		
+		return isSuccess;
+		
+
+	}, "Number Already Taken");
 	
-	jQuery.validator.addMethod("lettersonly", function(value, element) {
-		return this.optional(element) || /^[a-z]+$/i.test(value);
-	}, "Letters only please");
+	jQuery.validator.addMethod("verify", function(value, element) {
+		
+		if(that.verifiedNumber === undefined){
+			
+			that.verifiedNumber = {};
+			that.verifiedNumber.numbers = [];
+		}
+		if(that.verifiedNumber.numbers.indexOf($(element).val()) !== -1){
+			
+				return that.verifiedNumber.isNumberVerified;
+		}else{
+			
+				return false;
+		}
+		
+	}, "Verify your number");
 
 	$("#signUpForm1").validate({
 		
@@ -24,48 +62,40 @@ function validateSignUp1(){
 		onkeyup: function(element) { $(element).valid(); },
 		
 		rules: {
-			fName: {
-				
-				required: true,
-				lettersonly: true,
-				minlength: 2
-			},
-			lName: {
-				
-				required: true,
-				lettersonly: true,
-				minlength: 2
-			},
-			uEmail: {
-				required: false,
-				email: true
-			},
-			uMobile: {
+			
+			nUNumber: {
 				required: true,
 				number: true,
-				minlength: 10
+				minlength: 10,
+				userAvailability: true,
+				verify: true
+			},
+			nUPwd: {
+				required: true,
+				minlength: 5
+			},
+			nUCPwd: {
+				required: true,
+				equalTo: "#nUPwd"
 			}
 		},
 		messages: {
-			fName: {
-				required: "Enter first name",
-				minlength: "First name is too short"
-			},
-			lName: {
-				required: "Enter last name",
-				minlength: "Last name is too short"
-			},
-			uEmail: {
-				required: "Enter emailid ",
-				email: "Invalid email"
 			
-			},
-			uMobile: {
+			nUNumber: {
 				required: "Enter mobile number ",
 				number: "Enter only numbers",
 				minlength: "Enter 10 digit number"
 			
+			},
+			nUPwd: {
+				required: "Enter password",
+				minlength: "Atleast 5 characters"
+			},
+			nUCPwd: {
+				required: "Confirm password",
+				equalTo: "Passwords don't match"
 			}
+			
 		},errorPlacement: function (error, element) {
 			
 			
@@ -82,14 +112,21 @@ function validateSignUp1(){
 			
 			$(element).addClass("invalid-value");
 			
-			updateValidationStatus({signUp:"signUp1",elementId:$(element).attr("id"),isValid:false,linkButton:$("#next1")});
+			updateValidationStatus({signUp:"signUp1",elementId:$(element).attr("id"),isValid:false,navigationLinkButton:$("#next1")});
+			
+			if(newError === "Verify your number"){				
+				$("#verifyMobile").show();
+			}else{
+				
+				$("#verifyMobile").hide();
+			}
 			
 			
         },
         success: function (label, element) {
             $(element).tooltipster('hide');
 			$(element).removeClass("invalid-value");
-			updateValidationStatus({signUp:"signUp1",elementId:$(element).attr("id"),isValid:true,linkButton:$("#next1")});
+			updateValidationStatus({signUp:"signUp1",elementId:$(element).attr("id"),isValid:true,navigationLinkButton:$("#next1")});
         }
 	});
 	
@@ -104,30 +141,9 @@ function validateSignUp1(){
 
 function validateSignUp2(){
 	
-	jQuery.validator.addMethod("userAvailability", function(value, element) {
-		
-		var isSuccess = false;
-		
-		$.ajax({
-			url: "http://vps.hilfe.website:3800/checkUserNameAvailability",
-			type: "get", //send it through get method
-			data:{"userName":$(element).val()},
-			async: false,
-			success: function(response) {
-				console.log("User name available");
-				isSuccess = true;
-			},
-			error: function(xhr) {
-				isSuccess = false;
-				console.log("User name not available");
-				console.log(xhr);
-			}
-		});
-		
-		return isSuccess;
-		
-
-	}, "User name already taken"); 
+	jQuery.validator.addMethod("lettersonly", function(value, element) {
+		return this.optional(element) || /^[a-z]+$/i.test(value);
+	}, "Letters only please");
 		
 	$("#signUpForm2").validate({
 		
@@ -146,33 +162,30 @@ function validateSignUp2(){
 		},
 		onkeyup: function(element) { $(element).valid(); },
 		rules: {
-			nUName: {
+			fName: {
+				
 				required: true,
-				minlength: 2,
-				userAvailability: true
+				lettersonly: true,
+				minlength: 2
 			},
-			nUPwd: {
+			lName: {
+				
 				required: true,
-				minlength: 5
-			},
-			nUCPwd: {
-				required: true,
-				equalTo: "#nUPwd"
+				lettersonly: true,
+				minlength: 2
 			}
 		},
 		messages: {
-			nUName: {
-				required: "Enter user name",
-				minlength: "User name is too short"
+			
+			fName: {
+				required: "Enter first name",
+				minlength: "First name is too short"
 			},
-			nUPwd: {
-				required: "Enter password",
-				minlength: "Atleast 5 characters"
-			},
-			nUCPwd: {
-				required: "Confirm password",
-				equalTo: "Passwords don't match"
+			lName: {
+				required: "Enter last name",
+				minlength: "Last name is too short"
 			}
+						
 		},errorPlacement: function (error, element) {
 			
 			
@@ -187,13 +200,13 @@ function validateSignUp2(){
             }
 			
 			$(element).addClass("invalid-value");
-			updateValidationStatus({signUp:"signUp2",elementId:$(element).attr("id"),isValid:false,linkButton:$("#doneBtn")});
+			updateValidationStatus({signUp:"signUp2",elementId:$(element).attr("id"),isValid:false,navigationLinkButton:$("#doneBtn")});
 			
         },
         success: function (label, element) {
             $(element).tooltipster('hide');
 			$(element).removeClass("invalid-value");
-			updateValidationStatus({signUp:"signUp2",elementId:$(element).attr("id"),isValid:true,linkButton:$("#doneBtn")});
+			updateValidationStatus({signUp:"signUp2",elementId:$(element).attr("id"),isValid:true,navigationLinkButton:$("#doneBtn"),eventName:registerUser});
         }
 	});
 };
