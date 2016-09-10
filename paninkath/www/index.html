@@ -206,11 +206,10 @@
 			 <div id="forgotPassWordPopup"  data-role="popup" data-overlay-theme="b" data-position-to="window">
 				
 					<div data-role="header"><h1><b>Paninkath</b></h1></div>
-					<br>
-					<p><b>We have sent you a temporary password by SMS, use it to create your new permanent password</b></p>
-					<div data-role="main" class="ui-content">
+					<div id="forgotPwdPopupContent" data-role="main" class="ui-content">
+						<p><b>We have sent you a temporary password by SMS, use it to create your new permanent password</b></p>
 						<form id="updatePwdForm" method="post">
-							<input id="tmpPwd" type="password" name="tmpPwd" placeHolder="Temporary Password" />
+							<input id="tmpPwd" type="password" name="tmpPwd" placeHolder="OTP" />
 							<input id="newPwd" type="password" name="newPwd" placeHolder="New Password" />
 							<input id="cNewPwd" type="password" name="cNewPwd" placeHolder="Confirm Password" />
 							<a id="updateNewPwd" data-role="button" class="button" data-inline="true" changeHash="false">Submit</a>
@@ -219,6 +218,14 @@
 				  
 			 </div>
 			 
+			 <div id="incorrectTPWD"  data-role="popup" data-overlay-theme="b" data-position-to="window">
+				
+					<div data-role="header"><h1><b>Paninkath</b></h1></div>
+					<div id="incorrectTPWDContent" data-role="main" class="ui-content">
+						<p><b>Could not update password, you entered an incorrect temporary password. Try again!</b></p>
+					</div>
+				  
+			 </div>
 			 <div id="social" class="social">
 				<a id="fbLogin" href="#login" data-role="button" data-transition="slide" data-direction="forward" changeHash="false">FB</a>
 			 </div>

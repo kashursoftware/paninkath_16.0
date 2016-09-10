@@ -1,5 +1,9 @@
 function validateUpdatePwdForm(){
 	
+	jQuery.validator.addMethod("SMSMatch", function(value, element) {
+		return window.isSMSMatch;
+	}, "Incorrect OTP");
+	
 	$("#updatePwdForm").validate({
 		
 		onfocusout: function (element) {
@@ -23,11 +27,11 @@ function validateUpdatePwdForm(){
 			
 			tmpPwd: {
 				required: true,
+				SMSMatch: true
 			},
 			newPwd: {
 				required: true,
 				minlength: 5,
-				equalTo: "#cNewPwd"
 			},
 			cNewPwd: {
 				required: true,
@@ -38,12 +42,11 @@ function validateUpdatePwdForm(){
 		messages: {
 			
 			tmpPwd: {
-				required: "Temporary Password"
+				required: "OTP"
 			},
 			newPwd: {
 				required: "New Password",
 				minlength: "Atleast 5 characters",
-				equalTo: "Passwords don't match"
 			},
 			cNewPwd: {
 				required: "Confirm Password",
@@ -69,19 +72,11 @@ function validateUpdatePwdForm(){
 			
 			updateValidationStatus({formType:"updatePassword",elementId:$(element).attr("id"),isValid:false,navigationLinkButton:$("#updateNewPwd")});
 			
-			/*if(newError === "Verify your number"){				
-				$("#verifyMobile").show();
-			}else{
-				
-				$("#verifyMobile").hide();
-			}*/
-			
-			
         },
         success: function (label, element) {
             $(element).tooltipster('hide');
 			$(element).removeClass("invalid-value");
-			updateValidationStatus({formType:"updatePassword",elementId:$(element).attr("id"),isValid:true,navigationLinkButton:$("#updateNewPwd"),eventName:$.proxy(verifyTmpPwdAndUpdate,this)});
+			updateValidationStatus({formType:"updatePassword",elementId:$(element).attr("id"),isValid:true,navigationLinkButton:$("#updateNewPwd"),eventName:$.proxy(updateNewPassword,window)});
         }
 	});
 	
@@ -141,7 +136,7 @@ function validateSignUp1(){
 		},
 		
 		onfocusin: function (element) {
-			$(element).valid();
+			//$(element).valid();
 			if(($(element).data('lastError') !== "")){
 				$(element).tooltipster('show');
 			}
@@ -149,7 +144,7 @@ function validateSignUp1(){
 			
 		},
 		
-		onkeyup: function(element) { $(element).valid(); },
+		//onkeyup: function(element) { $(element).valid(); },
 		
 		rules: {
 			
@@ -163,7 +158,6 @@ function validateSignUp1(){
 			nUPwd: {
 				required: true,
 				minlength: 5,
-				equalTo: "#nUCPwd"
 			},
 			nUCPwd: {
 				required: true,
@@ -181,7 +175,6 @@ function validateSignUp1(){
 			nUPwd: {
 				required: "Enter password",
 				minlength: "Atleast 5 characters",
-				equalTo: "Passwords don't match"
 			},
 			nUCPwd: {
 				required: "Confirm password",
@@ -208,14 +201,16 @@ function validateSignUp1(){
 			
 			if(newError === "Verify your number"){				
 				$("#verifyMobile").show();
-			}else{
+			}/*else{
 				
 				$("#verifyMobile").hide();
-			}
+			}*/
 			
 			
         },
         success: function (label, element) {
+			
+			$("#signUpForm1").validate();
             $(element).tooltipster('hide');
 			$(element).removeClass("invalid-value");
 			updateValidationStatus({formType:"signUp1",elementId:$(element).attr("id"),isValid:true,navigationLinkButton:$("#next1")});

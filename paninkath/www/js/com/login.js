@@ -113,44 +113,58 @@ function logoutUser(){
 
 function getTmpPwd(){
 	
+	
+	var tempHtml = $("#forgotPwdPopupContent").html();
+	
 	var that = this, tempHtml;
 	
 	if($("#uNumber").val().length === 0){
-		tempHtml = $("#forgotPassWordPopup").html();
 		
-		$("#forgotPassWordPopup").html("<p><b>Please type in your registered mobile number first</b></p>");
+		$("#forgotPwdPopupContent").html("<p>Please type in your registered mobile number first</p>");
+		$("#forgotPwdPopupContent").show();
 		
 		$(this).bind({popupafterclose: function(event, ui) { 
 			
-				$("#forgotPassWordPopup").html(tempHtml);
+				$("#forgotPwdPopupContent").html(tempHtml);
+				
+				/*$(this).bind({popupafteropen: function(event, ui) { 
+			
+						initializeToolipsterOnForm($('#updatePwdForm input'));
+						validateUpdatePwdForm();
+			
+					}
+				});*/
 			}
 		});
 		
 	}else{
+		
 		
 		$.ajax({
 			url: "http://vps.hilfe.website:3800/checkUserNameAvailability",
 			type: "get", //send it through get method,
 			data:{"phone":$("#uNumber").val()},
 			success: function(response) {
-				
-				tempHtml = $("#forgotPassWordPopup").html();			
-				$("#forgotPassWordPopup").html("<p><b>No account found with this mobile number.</b></p>");				
+				$("#forgotPwdPopupContent").html("<p>No account found with this mobile number.</p>");	
 			},
 			error: function(xhr) {
 				
 				if(xhr.status == 401){
-						
+					
+					window.isSMSMatch = true;
+					$("#forgotPwdPopupContent").html(tempHtml);
+					initializeToolipsterOnForm($('#updatePwdForm input'));
+					validateUpdatePwdForm();
 					getTemporaryPassword();
+					
 				}else if(xhr.status == 0){
 					
-					tempHtml = $("#forgotPassWordPopup").html();			
-					$("#forgotPassWordPopup").html("<p><b>Paninkath is not able to connect. Please check your internet connection and try again</b></p>");				
+					$("#forgotPwdPopupContent").html("<p>Paninkath is not able to connect. Please check your internet connection and try again</p>");				
+					
 					
 				}else{
 					
-					tempHtml = $("#forgotPassWordPopup").html();			
-					$("#forgotPassWordPopup").html("<p><b>Paninkath is not sure what's hapening here. Please report this at www.paninkath.com</b></p>");
+					$("#forgotPwdPopupContent").html("<p>Paninkath is not sure what's hapening here. Please report this at www.paninkath.com</p>");
 				}
 								
 				console.log(xhr);
@@ -178,18 +192,25 @@ function getTemporaryPassword(){
 		}
 	}); 
 	
-	$(this).bind({popupafteropen: function(event, ui) { 
+	
+	
+	/*$(this).bind({popupafterclose: function(event, ui) { 
 			
-			initializeToolipsterOnForm($('#updatePwdForm input'));
-			validateUpdatePwdForm();
+			if(this._incorrectTPWW == true){
+				
+				$("#incorrectTPWD").popup("open");
+			}
 			
 		}
-	});
+	});*/
+	
+	
+			
 	
 	
 };
 
-function verifyTmpPwdAndUpdate(){
+function updateNewPassword(){
 	
 	var that = this;
 	
@@ -199,10 +220,15 @@ function verifyTmpPwdAndUpdate(){
 		data:{"tmpPwd":$("#tmpPwd").val(),"sId":that._sId},
 		success: function(response) {
 			console.log("OTP Verified");
-			prepareUpdatePassWordAssets();
+			performPasswordUpdate();
 		},
 		error: function(xhr) {
 			console.log(xhr);
+			that._incorrectTPWW = true;
+			window.isSMSMatch = false;
+			$("#tmpPwd").focus();
+			window.isSMSMatch = true;
+			
 		}
 	}); 
 	
@@ -210,9 +236,20 @@ function verifyTmpPwdAndUpdate(){
 	
 };
 
-function prepareUpdatePassWordAssets(){
+function performPasswordUpdate(){
 	
-	
-		//To do...
+	$.ajax({
+		url: "http://vps.hilfe.website:3800/updatePassword",
+		type: "get", //send it through get method
+		data:{"newPwd":$("#newPwd").val(), "phone":$("#uNumber").val()},
+		success: function(response) {
+			console.log("Password updated");
+			$("#forgotPwdPopupContent").html("<p>Password updated successfully!</p>");
+			//$("#forgotPassWordPopup").popup("close");
+		},
+		error: function(xhr) {
+			console.log(xhr);
+		}
+	});
 	
 };
