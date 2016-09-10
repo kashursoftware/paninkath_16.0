@@ -60,22 +60,16 @@
 
 
 		$(document).on("pagecreate","#login",function(){
-			   
-			  $("#loginBtn").on("tap",loginUser);
+			  			   
+			 //initializeToolipsterOnForm($('#loginForm input'));
+			 //validateLogin();
+			
+			 $("#loginBtn").on("tap",loginUser);
 			  
 			  $("#forgotPassword").on("tap",$.proxy(getTmpPwd,that));
 			  
-			  $("#tmpPwd").on("keyup",function(){
-			
-				if(this.value.length >=6){
-					enableLinkButton($("#verifyTemPwd"),true, $.proxy(verifyTmpPwd,that));
-				}else{
-					enableLinkButton($("#verifyTemPwd"));
-				}
-			
-			  });
 			  
-			  enableLinkButton($("#verifyTemPwd"));
+			  enableLinkButton($("#updateNewPwd"));
 			  
 			  autoLogin();
 			  
@@ -83,6 +77,7 @@
 		
 		$(document).on("pagebeforeshow","#login",function(event,data){
 		
+			
 			if( (isUserLoggedIn()) && (data.prevPage.attr("id") === "home")){
 				
 				$("#login").hide();
@@ -195,23 +190,36 @@
 				<h1><b>PaninKath...</b></h1>
 		    </div>
 		   <div data-role="main" class="ui-content">
-		     <form id="loginForm" method="post" action="demoform.asp">
+		     <form id="loginForm" method="post">
 				<input id="uNumber" type="number" name="uNumber" placeHolder="Registered Mobile Number">
-				<input id="uPwd" type="password" name="pwd" id="pwd" placeHolder="Password">
+				<input id="uPwd" type="password" name="uPwd" placeHolder="Password">
 				<a id="loginBtn" data-role="button"  data-transition="slide" data-direction="forward" changeHash="false">Login</a><!--class="button ui-disabled"-->
 				<a id="forgotPassword" href="#forgotPassWordPopup" data-rel="popup">Forgot Password</a>
+			 </form>
+			 
+			 <div id="failedToLogin" data-role="popup" data-position-to="#uPwd">
 				
-				<div data-role="popup" id="forgotPassWordPopup" data-overlay-theme="b" data-position-to="window">
+				<div data-role="header"><h1><b>Paninkath</b></h1></div>
+				<a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+					<p id="loginFailMessage"><b>Incorrect username and password :(</b></p>
+			 </div>
+			 
+			 <div data-role="popup" id="forgotPassWordPopup" data-overlay-theme="b" data-position-to="window">
 				
 					<div data-role="header"><h1><b>Paninkath</b></h1></div>
 					<br>
-					<p><b>Enter below the temporary password received in SMS:</b></p>
-					<div data-role="main" class="ui-content"><input id="tmpPwd" type="password" name="tmpPwd" placeHolder="Temporary Password" />
-					<a id="verifyTemPwd" data-role="button" class="button" data-inline="true" changeHash="false">Submit</a>
+					<p><b>We have sent you a temporary password by SMS, use it to create your new permanent password</b></p>
+					<div data-role="main" class="ui-content">
+						<form id="updatePwdForm" method="post">
+							<input id="uNumberR" type="password" name="uNumberR" placeHolder="Registered Mobile Number" />
+							<input id="tmpPwd" type="password" name="tmpPwd" placeHolder="Temporary Password" />
+							<input id="newPwd" type="password" name="newPwd" placeHolder="New Password" />
+							<input id="cNewPwd" type="password" name="cNewPwd" placeHolder="Confirm Password" />
+							<a id="updateNewPwd" data-role="button" class="button" data-inline="true" changeHash="false">Submit</a>
+						</form>
 					</div>
 				  
-				</div>
-			 </form>
+			 </div>
 			 
 			 <div id="social" class="social">
 				<a id="fbLogin" href="#login" data-role="button" data-transition="slide" data-direction="forward" changeHash="false">FB</a>

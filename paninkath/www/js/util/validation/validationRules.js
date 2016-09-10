@@ -1,3 +1,102 @@
+function validateUpdatePwdForm(){
+	
+	$("#updatePwdForm").validate({
+		
+		onfocusout: function (element) {
+			$(element).valid();
+			$(element).tooltipster('hide');
+			
+		},
+		
+		onfocusin: function (element) {
+			$(element).valid();
+			if(($(element).data('lastError') !== "")){
+				$(element).tooltipster('show');
+			}
+			
+			
+		},
+		
+		onkeyup: function(element) { $(element).valid(); },
+		
+		rules: {
+			
+			uNumberR: {
+				required: true,
+				minlength: 10
+			},			
+			tmpPwd: {
+				required: true,
+			},
+			newPwd: {
+				required: true,
+				minlength: 5,
+				equalTo: "#cNewPwd"
+			},
+			cNewPwd: {
+				required: true,
+				equalTo: "#newPwd"
+			}
+			
+		},
+		messages: {
+			
+			uNumberR:{
+				
+				required: "Registered Number"
+			},
+			
+			tmpPwd: {
+				required: "Temporary Password"
+			},
+			newPwd: {
+				required: "New Password",
+				minlength: "Atleast 5 characters",
+				equalTo: "Passwords don't match"
+			},
+			cNewPwd: {
+				required: "Confirm Password",
+				equalTo: "Passwords don't match"
+			}
+			
+			
+		},errorPlacement: function (error, element) {
+			
+			
+            var lastError = $(element).data('lastError'),
+                newError = $(error).text();
+
+            $(element).data('lastError', newError);
+			
+
+            if(newError !== '' && newError !== lastError){
+                $(element).tooltipster('content', newError);
+                $(element).tooltipster('show');
+            }
+			
+			$(element).addClass("invalid-value");
+			
+			updateValidationStatus({formType:"updatePassword",elementId:$(element).attr("id"),isValid:false,navigationLinkButton:$("#updateNewPwd")});
+			
+			/*if(newError === "Verify your number"){				
+				$("#verifyMobile").show();
+			}else{
+				
+				$("#verifyMobile").hide();
+			}*/
+			
+			
+        },
+        success: function (label, element) {
+            $(element).tooltipster('hide');
+			$(element).removeClass("invalid-value");
+			updateValidationStatus({formType:"updatePassword",elementId:$(element).attr("id"),isValid:true,navigationLinkButton:$("#updateNewPwd"),eventName:$.proxy(verifyTmpPwdAndUpdate,this)});
+        }
+	});
+	
+	
+};
+
 function validateSignUp1(){
 		
 	jQuery.validator.addMethod("userAvailability", function(value, element) {
@@ -72,7 +171,8 @@ function validateSignUp1(){
 			},
 			nUPwd: {
 				required: true,
-				minlength: 5
+				minlength: 5,
+				equalTo: "#nUCPwd"
 			},
 			nUCPwd: {
 				required: true,
@@ -89,7 +189,8 @@ function validateSignUp1(){
 			},
 			nUPwd: {
 				required: "Enter password",
-				minlength: "Atleast 5 characters"
+				minlength: "Atleast 5 characters",
+				equalTo: "Passwords don't match"
 			},
 			nUCPwd: {
 				required: "Confirm password",
@@ -112,7 +213,7 @@ function validateSignUp1(){
 			
 			$(element).addClass("invalid-value");
 			
-			updateValidationStatus({signUp:"signUp1",elementId:$(element).attr("id"),isValid:false,navigationLinkButton:$("#next1")});
+			updateValidationStatus({formType:"signUp1",elementId:$(element).attr("id"),isValid:false,navigationLinkButton:$("#next1")});
 			
 			if(newError === "Verify your number"){				
 				$("#verifyMobile").show();
@@ -126,7 +227,7 @@ function validateSignUp1(){
         success: function (label, element) {
             $(element).tooltipster('hide');
 			$(element).removeClass("invalid-value");
-			updateValidationStatus({signUp:"signUp1",elementId:$(element).attr("id"),isValid:true,navigationLinkButton:$("#next1")});
+			updateValidationStatus({formType:"signUp1",elementId:$(element).attr("id"),isValid:true,navigationLinkButton:$("#next1")});
         }
 	});
 	
@@ -200,13 +301,104 @@ function validateSignUp2(){
             }
 			
 			$(element).addClass("invalid-value");
-			updateValidationStatus({signUp:"signUp2",elementId:$(element).attr("id"),isValid:false,navigationLinkButton:$("#doneBtn")});
+			updateValidationStatus({formType:"signUp2",elementId:$(element).attr("id"),isValid:false,navigationLinkButton:$("#doneBtn")});
 			
         },
         success: function (label, element) {
             $(element).tooltipster('hide');
 			$(element).removeClass("invalid-value");
-			updateValidationStatus({signUp:"signUp2",elementId:$(element).attr("id"),isValid:true,navigationLinkButton:$("#doneBtn"),eventName:registerUser});
+			updateValidationStatus({formType:"signUp2",elementId:$(element).attr("id"),isValid:true,navigationLinkButton:$("#doneBtn"),eventName:registerUser});
         }
 	});
 };
+//=====================================================
+//Archive
+/*
+function validateLogin(){
+		
+
+	$("#loginForm").validate({
+		
+		onfocusout: function (element) {
+			$(element).valid();
+			$(element).tooltipster('hide');
+			
+		},
+		
+		onfocusin: function (element) {
+			$(element).valid();
+			if(($(element).data('lastError') !== "")){
+				$(element).tooltipster('show');
+			}
+			
+			
+		},
+		
+		onkeyup: function(element) { $(element).valid(); },
+		
+		rules: {
+			
+			uNumber: {
+				required: true,
+			},
+			uPwd: {
+				required: true,
+			},
+			tmpPwd: {
+				required: true,
+			},
+			newPwd: {
+				required: true,
+			},
+			cNewPwd: {
+				required: true,
+			}
+			
+		},
+		messages: {
+			
+			uNumber: {
+				required: "Your registered mobile number "
+			},
+			uPwd: {
+				required: "Your password"
+			},
+			tmpPwd: {
+				required: "Enter temporary password you received"
+			},
+			newPwd: {
+				required: "Enter new password"
+			},
+			cNewPwd: {
+				required: "Confirm new password"
+			}
+			
+			
+		},errorPlacement: function (error, element) {
+			
+			
+            var lastError = $(element).data('lastError'),
+                newError = $(error).text();
+
+            $(element).data('lastError', newError);
+			
+
+            if(newError !== '' && newError !== lastError){
+                $(element).tooltipster('content', newError);
+                $(element).tooltipster('show');
+            }
+			
+			$(element).addClass("invalid-value");
+			
+			
+			
+        },
+        success: function (label, element) {
+            $(element).tooltipster('hide');
+			$(element).removeClass("invalid-value");
+			//updateValidationStatus({signUp:"signUp1",elementId:$(element).attr("id"),isValid:true,navigationLinkButton:$("#next1")});
+        }
+	});
+	
+	
+};*/

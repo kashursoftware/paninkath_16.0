@@ -13,6 +13,19 @@ function loginUser(){
 			onLoginSuccess(response);
 		},
 		error: function(xhr) {
+				
+			if(xhr.status === 401){
+					
+				$("#loginFailMessage").html("<b>The credentials entered by you are not correct</b>");
+			}else if(xhr.status === 0){
+				
+				$("#loginFailMessage").html("<b>Paninkath is not able to login. Please check your internet connection and try again</b>");
+			}else{
+				
+				$("#loginFailMessage").html("<b>Paninkath is not sure what's hapening here. Please report this at www.paninkath.com</b>");
+			}
+			
+			$("#failedToLogin").popup("open");
 			console.log(xhr);
 		}
 	});
@@ -105,7 +118,7 @@ function getTmpPwd(){
 	$.ajax({
 		url: "http://vps.hilfe.website:3800/getTP",
 		type: "get", //send it through get method,
-		data:{"phone":$("#uNumber").val()},
+		data:{"phone":$("#uNumberR").val()},
 		success: function(response) {
 			console.log("TP Request Sent......");
 			that._sId = response.sId;
@@ -115,11 +128,19 @@ function getTmpPwd(){
 		}
 	}); 
 	
+	$(this).bind({popupafteropen: function(event, ui) { 
+			
+			initializeToolipsterOnForm($('#updatePwdForm input'));
+			validateUpdatePwdForm();
+			
+		}
+	});
+	
 	
 };
 
 
-function verifyTmpPwd(){
+function verifyTmpPwdAndUpdate(){
 	
 	var that = this;
 	
@@ -135,6 +156,8 @@ function verifyTmpPwd(){
 			console.log(xhr);
 		}
 	}); 
+	
+	
 	
 };
 
