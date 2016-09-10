@@ -21,10 +21,6 @@ function validateUpdatePwdForm(){
 		
 		rules: {
 			
-			uNumberR: {
-				required: true,
-				minlength: 10
-			},			
 			tmpPwd: {
 				required: true,
 			},
@@ -40,11 +36,6 @@ function validateUpdatePwdForm(){
 			
 		},
 		messages: {
-			
-			uNumberR:{
-				
-				required: "Registered Number"
-			},
 			
 			tmpPwd: {
 				required: "Temporary Password"
@@ -106,7 +97,7 @@ function validateSignUp1(){
 		$.ajax({
 			url: "http://vps.hilfe.website:3800/checkUserNameAvailability",
 			type: "get", //send it through get method
-			data:{"nUNumber":$(element).val()},
+			data:{"phone":$(element).val()},
 			async: false,
 			success: function(response) {
 				console.log("User name available");

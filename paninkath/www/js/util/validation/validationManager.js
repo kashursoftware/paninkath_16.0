@@ -2,7 +2,6 @@ var _validationStatus = {
 	
 	updatePassword: {
 		
-		uNumberR: false,
 		tmpPwd: false,
 		newPwd: false,
 		cNewPwd: false

@@ -16,13 +16,13 @@ function loginUser(){
 				
 			if(xhr.status === 401){
 					
-				$("#loginFailMessage").html("<b>The credentials entered by you are not correct</b>");
+				$("#loginFailMessage").html("<p><b>The credentials entered by you are not correct</b></p>");
 			}else if(xhr.status === 0){
 				
-				$("#loginFailMessage").html("<b>Paninkath is not able to login. Please check your internet connection and try again</b>");
+				$("#loginFailMessage").html("<p><b>Paninkath is not able to login. Please check your internet connection and try again</b></p>");
 			}else{
 				
-				$("#loginFailMessage").html("<b>Paninkath is not sure what's hapening here. Please report this at www.paninkath.com</b>");
+				$("#loginFailMessage").html("<p><b>Paninkath is not sure what's hapening here. Please report this at www.paninkath.com</b></p>");
 			}
 			
 			$("#failedToLogin").popup("open");
@@ -113,12 +113,62 @@ function logoutUser(){
 
 function getTmpPwd(){
 	
-	var that = this;
+	var that = this, tempHtml;
+	
+	if($("#uNumber").val().length === 0){
+		tempHtml = $("#forgotPassWordPopup").html();
+		
+		$("#forgotPassWordPopup").html("<p><b>Please type in your registered mobile number first</b></p>");
+		
+		$(this).bind({popupafterclose: function(event, ui) { 
+			
+				$("#forgotPassWordPopup").html(tempHtml);
+			}
+		});
+		
+	}else{
+		
+		$.ajax({
+			url: "http://vps.hilfe.website:3800/checkUserNameAvailability",
+			type: "get", //send it through get method,
+			data:{"phone":$("#uNumber").val()},
+			success: function(response) {
+				
+				tempHtml = $("#forgotPassWordPopup").html();			
+				$("#forgotPassWordPopup").html("<p><b>No account found with this mobile number.</b></p>");				
+			},
+			error: function(xhr) {
+				
+				if(xhr.status == 401){
+						
+					getTemporaryPassword();
+				}else if(xhr.status == 0){
+					
+					tempHtml = $("#forgotPassWordPopup").html();			
+					$("#forgotPassWordPopup").html("<p><b>Paninkath is not able to connect. Please check your internet connection and try again</b></p>");				
+					
+				}else{
+					
+					tempHtml = $("#forgotPassWordPopup").html();			
+					$("#forgotPassWordPopup").html("<p><b>Paninkath is not sure what's hapening here. Please report this at www.paninkath.com</b></p>");
+				}
+								
+				console.log(xhr);
+			}
+		});
+		
+	}
+	
+	
+};
+
+function getTemporaryPassword(){
+	
 	
 	$.ajax({
 		url: "http://vps.hilfe.website:3800/getTP",
 		type: "get", //send it through get method,
-		data:{"phone":$("#uNumberR").val()},
+		data:{"phone":$("#uNumber").val()},
 		success: function(response) {
 			console.log("TP Request Sent......");
 			that._sId = response.sId;
@@ -138,7 +188,6 @@ function getTmpPwd(){
 	
 	
 };
-
 
 function verifyTmpPwdAndUpdate(){
 	
