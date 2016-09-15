@@ -68,6 +68,8 @@
 			  
 			  $("#forgotPassword").on("tap",$.proxy(getTmpPwd,that));
 			  
+			  initializeToolipsterOnForm($('#updatePwdForm input'));
+			  validateUpdatePwdForm();
 			  
 			  enableLinkButton($("#updateNewPwd"));
 			  
@@ -102,7 +104,10 @@
 			$("#logoutLink").on("tap",logoutUser);			
 		});
 		
-		$(document).on("pagecreate","#signUp1",function(){
+		$(document).on("pagecreate","#signUp1",function(){//
+		
+			initializeToolipsterOnForm($('#tempCodeForm input'));
+			validateTempCodeForm();
 		
 			$("#verifyMobile").on("tap",$.proxy(verifyNumber,that));//
 			
@@ -114,7 +119,14 @@
 					enableLinkButton($("#verifyCode"));
 				}
 			
-			});
+		});
+			
+		$(document).on("pageshow","#signUp1",function(){
+			
+			$("#verifyMobile").html("Verify Number");
+			enableLinkButton($("#verifyMobile"), true, $.proxy(verifyNumber,window));
+			
+		});
 			
 			
 		
@@ -191,25 +203,27 @@
 		    </div>
 		   <div data-role="main" class="ui-content">
 		     <form id="loginForm" method="post">
-				<input id="uNumber" type="number" name="uNumber" placeHolder="Registered Mobile Number">
+				<p id="loginMsg" style="text-align: left"></p>
+				<input id="uName" type="text" name="uName" placeHolder="User Name">
 				<input id="uPwd" type="password" name="uPwd" placeHolder="Password">
 				<a id="loginBtn" data-role="button"  data-transition="slide" data-direction="forward" changeHash="false">Login</a><!--class="button ui-disabled"-->
-				<a id="forgotPassword" href="#forgotPassWordPopup" data-rel="popup">Forgot Password</a>
+				<a id="forgotPassword">Forgot Password</a>
 			 </form>
 			 
+			 <!-- POPUPS-->
 			 <div id="failedToLogin" data-role="popup" data-overlay-theme="b" data-position-to="window">
 				
 				<div data-role="header"><h1><b>Paninkath</b></h1></div>
 					<p id="loginFailMessage"><b>Incorrect username and password :(</b></p>
 			 </div>
 			 
-			 <div id="forgotPassWordPopup"  data-role="popup" data-overlay-theme="b" data-position-to="window">
+			 <div id="forgotPasswordPopup"  data-role="popup" data-overlay-theme="b" data-position-to="window">
 				
 					<div data-role="header"><h1><b>Paninkath</b></h1></div>
 					<div id="forgotPwdPopupContent" data-role="main" class="ui-content">
 						<p><b>We have sent you a temporary password by SMS, use it to create your new permanent password</b></p>
 						<form id="updatePwdForm" method="post">
-							<input id="tmpPwd" type="password" name="tmpPwd" placeHolder="OTP" />
+							<input id="tmpPwd" type="text" name="tmpPwd" placeHolder="OTP" />
 							<input id="newPwd" type="password" name="newPwd" placeHolder="New Password" />
 							<input id="cNewPwd" type="password" name="cNewPwd" placeHolder="Confirm Password" />
 							<a id="updateNewPwd" data-role="button" class="button" data-inline="true" changeHash="false">Submit</a>
@@ -217,6 +231,52 @@
 					</div>
 				  
 			 </div>
+			 
+			 <div id="emptyUserName"  data-role="popup" data-overlay-theme="b" data-position-to="window">
+				
+					<div data-role="header"><h1><b>Paninkath</b></h1></div>
+					<div id="emptyUserNameContent" data-role="main" class="ui-content">
+						<p><b>Please type in your username first</b></p>
+					</div>
+				  
+			 </div>
+			 
+			 <div id="noSuchUserName"  data-role="popup" data-overlay-theme="b" data-position-to="window">
+				
+					<div data-role="header"><h1><b>Paninkath</b></h1></div>
+					<div id="noSuchUserNameContent" data-role="main" class="ui-content">
+						<p><b>This username does not exist</b></p>
+					</div>
+				  
+			 </div>
+			 
+			 <div id="noConnection"  data-role="popup" data-overlay-theme="b" data-position-to="window">
+				
+					<div data-role="header"><h1><b>Paninkath</b></h1></div>
+					<div id="noConnectionContent" data-role="main" class="ui-content">
+						<p><b>We couldn't connect to services, please check your internet connection</b></p>
+					</div>
+				  
+			 </div>
+			 
+			 <div id="unknownError"  data-role="popup" data-overlay-theme="b" data-position-to="window">
+				
+					<div data-role="header"><h1><b>Paninkath</b></h1></div>
+					<div id="unknownErrorContent" data-role="main" class="ui-content">
+						<p><b>We are not what happened there. Please report this at www.paninkath.com</b></p>
+					</div>
+				  
+			 </div>
+			 
+			 <div id="pwdUpdateSuccessful"  data-role="popup" data-overlay-theme="b" data-position-to="window">
+				
+					<div data-role="header"><h1><b>Paninkath</b></h1></div>
+					<div id="pwdUpdateSuccessfulContent" data-role="main" class="ui-content">
+						<p><b>Password updated successfully!</b></p>
+					</div>
+				  
+			 </div>
+			 
 			 
 			 <div id="incorrectTPWD"  data-role="popup" data-overlay-theme="b" data-position-to="window">
 				
@@ -226,6 +286,8 @@
 					</div>
 				  
 			 </div>
+			 
+			 <!--POPUPS End-->
 			 <div id="social" class="social">
 				<a id="fbLogin" href="#login" data-role="button" data-transition="slide" data-direction="forward" changeHash="false">FB</a>
 			 </div>
@@ -242,25 +304,29 @@
 		   <div data-role="main" class="ui-content">
 		     <form id="signUpForm1" method="post" class="signUpForm">
 			 	
+				<input id="nUName" type="text" name="nUName" placeHolder="Enter User Name">
+				<input id="nUPwd" type="password" name="nUPwd" placeHolder="Password">
+				<input id="nUCPwd" type="password" name="nUCPwd" placeHolder="Confirm Password">
 				<input id="nUNumber" type="number" name="nUNumber" placeHolder="Mobile Number" />
-				<a id="verifyMobile" href="#verifyNumberPopup" data-rel="popup">Verify Number</a>
-
-				<div data-role="popup" id="verifyNumberPopup" data-overlay-theme="b" data-position-to="window">
+				<a id="verifyMobile">Verify Number</a>
+			 </form>
+			 
+			 <div data-role="popup" id="verifyNumberPopup" data-overlay-theme="b" data-position-to="window">
 				
 					<div data-role="header"><h1><b>Paninkath</b></h1></div>
 					<br>
 					<p><b>Enter below the code received in SMS:</b></p>
-					<div data-role="main" class="ui-content"><input id="vCode" type="number" name="vCode" placeHolder="Verification code" />
-						<a id="verifyCode" data-role="button" class="button" data-inline="true" changeHash="false">Done</a>
+					
+					<div data-role="main" class="ui-content">
+						<form id="tempCodeForm">
+							<input id="vCode" type="number" name="vCode" placeHolder="Verification code" />
+							<a id="verifyCode" data-role="button" class="button" data-inline="true" changeHash="false">Done</a>
+						</form>
 					</div>
+					
 					<!--<div data-role="footer"><h1>Footer Text..</h1></div>-->
 				  
 				</div>
-
-				
-				<input id="nUPwd" type="password" name="nUPwd" placeHolder="Password">
-				<input id="nUCPwd" type="password" name="nUCPwd" placeHolder="Confirm Password">
-			 </form>
 
 	         <a href="#login" data-role="button" class="button" data-transition="slide" data-direction="reverse" data-inline="true" changeHash="false">Back</a> 
 			 <a id="next1" href="#signUp2" data-role="button" class="button" tabIndex="-1" data-transition="slide" data-direction="forward" data-inline="true" changeHash="false" enabled="false">Next</a>

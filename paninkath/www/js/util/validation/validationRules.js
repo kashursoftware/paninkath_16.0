@@ -1,3 +1,68 @@
+function validateTempCodeForm(){
+		
+	jQuery.validator.addMethod("CodeMatch", function(value, element) {
+		return window.isCodeMatch;
+	}, "Incorrect Code");
+	
+	$("#tempCodeForm").validate({
+		
+		onfocusout: function (element) {
+			$(element).valid();
+			$(element).tooltipster('hide');
+			
+		},
+		
+		onfocusin: function (element) {
+			$(element).valid();
+			if(($(element).data('lastError') !== "")){
+				$(element).tooltipster('show');
+			}
+			
+			
+		},
+		
+		onkeyup: function(element) { $(element).valid(); },
+		
+		rules: {
+			
+			vCode: {
+				required: true,
+				CodeMatch: true
+			}
+			
+		},
+		messages: {
+			
+			vCode: {
+				required: "Temporary code"
+			}
+		},errorPlacement: function (error, element) {
+			
+			
+            var lastError = $(element).data('lastError'),
+                newError = $(error).text();
+
+            $(element).data('lastError', newError);
+			
+
+            if(newError !== '' && newError !== lastError){
+                $(element).tooltipster('content', newError);
+                $(element).tooltipster('show');
+            }
+			
+			$(element).addClass("invalid-value");
+			
+			updateValidationStatus({formType:"tempCodeForm",elementId:$(element).attr("id"),isValid:false,navigationLinkButton:$("#verifyCode")});
+			
+        },
+        success: function (label, element) {
+            $(element).tooltipster('hide');
+			$(element).removeClass("invalid-value");
+			updateValidationStatus({formType:"tempCodeForm",elementId:$(element).attr("id"),isValid:true,navigationLinkButton:$("#verifyCode"),eventName:$.proxy(validateCode,window)});
+        }
+	});
+	
+};
 function validateUpdatePwdForm(){
 	
 	jQuery.validator.addMethod("SMSMatch", function(value, element) {
@@ -92,7 +157,7 @@ function validateSignUp1(){
 		$.ajax({
 			url: "http://vps.hilfe.website:3800/checkUserNameAvailability",
 			type: "get", //send it through get method
-			data:{"phone":$(element).val()},
+			data:{"uName":$(element).val()},
 			async: false,
 			success: function(response) {
 				console.log("User name available");
@@ -108,7 +173,7 @@ function validateSignUp1(){
 		return isSuccess;
 		
 
-	}, "Number Already Taken");
+	}, "Username Already Taken");
 	
 	jQuery.validator.addMethod("verify", function(value, element) {
 		
@@ -144,17 +209,17 @@ function validateSignUp1(){
 			
 		},
 		
-		//onkeyup: function(element) { $(element).valid(); },
+		onkeyup: function(element) { $(element).valid(); },
 		
 		rules: {
 			
-			nUNumber: {
+			nUName:{
+				
 				required: true,
-				number: true,
-				minlength: 10,
-				userAvailability: true,
-				verify: true
+				minlength: 2,
+				userAvailability: true
 			},
+
 			nUPwd: {
 				required: true,
 				minlength: 5,
@@ -162,16 +227,21 @@ function validateSignUp1(){
 			nUCPwd: {
 				required: true,
 				equalTo: "#nUPwd"
+			},
+			nUNumber: {
+				required: true,
+				number: true,
+				verify: true
 			}
 		},
 		messages: {
 			
-			nUNumber: {
-				required: "Enter mobile number ",
-				number: "Enter only numbers",
-				minlength: "Enter 10 digit number"
-			
+			nUName:{
+				
+				required: "Enter User Name",
+				minlength: "Username Too Short"
 			},
+			
 			nUPwd: {
 				required: "Enter password",
 				minlength: "Atleast 5 characters",
@@ -179,6 +249,11 @@ function validateSignUp1(){
 			nUCPwd: {
 				required: "Confirm password",
 				equalTo: "Passwords don't match"
+			},
+			nUNumber: {
+				required: "Enter mobile number ",
+				number: "Enter only numbers"
+			
 			}
 			
 		},errorPlacement: function (error, element) {

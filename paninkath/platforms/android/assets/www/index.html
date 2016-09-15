@@ -34,10 +34,9 @@
         * Enable eval(): add 'unsafe-eval' to default-src
     * Create your own at http://cspisawesome.com
     -->
-     <!--<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: 'unsafe-inline' https://ssl.gstatic.com; style-src 'self' 'unsafe-inline';script-src 'self' http://119.18.52.6:3800 'unsafe-inline' 'unsafe-eval'; media-src *" />-->
-	 
-	 <!--<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; script-src 'self' http://vps.hilfe.website 'unsafe-inline' 'unsafe-eval';  media-src *">-->
-	 <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; connect-src http://vps.hilfe.website:3800">
+	<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; connect-src http://vps.hilfe.website:3800">
+    <!--<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; connect-src http://vps.hilfe.website:3800 https://2factor.in">-->
+	<!--<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; connect-src https://2factor.in">-->
     <link rel="stylesheet" type="text/css" href="css/index.css" />
 	<link rel="stylesheet" href="js/libs/jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.css">
 	<script src="js/libs/jquery.mobile-1.4.5/jquery-1.11.3.min.js"></script>
@@ -61,9 +60,22 @@
 
 
 		$(document).on("pagecreate","#login",function(){
-			   
-			  $("#doneBtn").on("tap",registerUser);
-			  $("#loginBtn").on("tap",loginUser);
+			  			   
+			 //initializeToolipsterOnForm($('#loginForm input'));
+			 //validateLogin();
+			
+			 $("#loginBtn").on("tap",loginUser);
+			  
+			  $("#forgotPassword").on("tap",$.proxy(getTmpPwd,that));
+			  
+			  initializeToolipsterOnForm($('#updatePwdForm input'));
+			  validateUpdatePwdForm();
+			  
+			  initializeToolipsterOnForm($('#tempCodeForm input'));
+			  validateTempCodeForm();
+			  
+			  
+			  enableLinkButton($("#updateNewPwd"));
 			  
 			  autoLogin();
 			  
@@ -71,6 +83,7 @@
 		
 		$(document).on("pagebeforeshow","#login",function(event,data){
 		
+			
 			if( (isUserLoggedIn()) && (data.prevPage.attr("id") === "home")){
 				
 				$("#login").hide();
@@ -95,13 +108,39 @@
 			$("#logoutLink").on("tap",logoutUser);			
 		});
 		
-		$(document).on("pagecreate","#signUp1",function(){
+		$(document).on("pagecreate","#signUp1",function(){//
+		
+
+		
+			$("#verifyMobile").on("tap",$.proxy(verifyNumber,that));//
+			
+			$("#vCode").on("keyup",function(){
+			
+				if(this.value.length >=6){
+					enableLinkButton($("#verifyCode"),true, $.proxy(validateCode,that));
+				}else{
+					enableLinkButton($("#verifyCode"));
+				}
+			
+			});
+			
+		$(document).on("pageshow","#signUp1",function(){
+			
+			$("#verifyMobile").html("Verify Number");
+			enableLinkButton($("#verifyMobile"), true, $.proxy(verifyNumber,window));
+			
+		});
+			
+			
 		
 			initializeToolipsterOnForm($('#signUpForm1 input'));
 	
 			validateSignUp1();
 			
 			enableLinkButton($("#next1"));
+			enableLinkButton($("#verifyCode"));
+			
+			$("#verifyMobile").hide();
 		});
 		
 		$(document).on("pagecreate","#signUp2",function(){
@@ -109,6 +148,7 @@
 			 initializeToolipsterOnForm($('#signUpForm2 input'));
 			 validateSignUp2();
 			 enableLinkButton($("#doneBtn"));
+			 $("#doneBtn").on("tap",registerUser);
 			 
 			 //$("#nUName").on("keyup",$.proxy(checkUNameAvailability,that));
 			// $("#nUName").on("focusin",$.proxy(checkUNameAvailability,that));
@@ -144,30 +184,9 @@
 		function onDeviceReady(){
 		
 			$("#fbLogin").on("tap",onFBLogin);
-			
-			$("#doneBtn").on("tap",registerUser);			
-			
 			$("#loginBtn").on("tap",loginUser);
 				
 		}	
-		
-		/*function trial(){
-			
-			$.ajax({
-				url : "http://vps.hilfe.website:3800/welcomeUser",
-				type: "get",
-				headers: {
-				'X-Auth-Token' : window.localStorage.getItem("token")
-				}, 
-				success: function(response) {
-					console.log("Token Sent...");
-				},
-				error: function(xhr) {
-					console.log(xhr);
-				}
-			});
-			
-		};*/			
 
 	</script>
 
@@ -186,11 +205,92 @@
 				<h1><b>PaninKath...</b></h1>
 		    </div>
 		   <div data-role="main" class="ui-content">
-		     <form id="loginForm" method="post" action="demoform.asp">
-				<input id="uName" type="text" name="uname" id="uname" placeHolder="User Name">
-				<input id="uPwd" type="password" name="pwd" id="pwd" placeHolder="Password">
+		     <form id="loginForm" method="post">
+				<p id="loginMsg" style="text-align: left"></p>
+				<input id="uNumber" type="number" name="uNumber" placeHolder="Registered Mobile Number">
+				<input id="uPwd" type="password" name="uPwd" placeHolder="Password">
 				<a id="loginBtn" data-role="button"  data-transition="slide" data-direction="forward" changeHash="false">Login</a><!--class="button ui-disabled"-->
+				<a id="forgotPassword">Forgot Password</a>
 			 </form>
+			 
+			 <!-- POPUPS-->
+			 <div id="failedToLogin" data-role="popup" data-overlay-theme="b" data-position-to="window">
+				
+				<div data-role="header"><h1><b>Paninkath</b></h1></div>
+					<p id="loginFailMessage"><b>Incorrect username and password :(</b></p>
+			 </div>
+			 
+			 <div id="forgotPasswordPopup"  data-role="popup" data-overlay-theme="b" data-position-to="window">
+				
+					<div data-role="header"><h1><b>Paninkath</b></h1></div>
+					<div id="forgotPwdPopupContent" data-role="main" class="ui-content">
+						<p><b>We have sent you a temporary password by SMS, use it to create your new permanent password</b></p>
+						<form id="updatePwdForm" method="post">
+							<input id="tmpPwd" type="text" name="tmpPwd" placeHolder="OTP" />
+							<input id="newPwd" type="password" name="newPwd" placeHolder="New Password" />
+							<input id="cNewPwd" type="password" name="cNewPwd" placeHolder="Confirm Password" />
+							<a id="updateNewPwd" data-role="button" class="button" data-inline="true" changeHash="false">Submit</a>
+						</form>
+					</div>
+				  
+			 </div>
+			 
+			 <div id="emptyUserName"  data-role="popup" data-overlay-theme="b" data-position-to="window">
+				
+					<div data-role="header"><h1><b>Paninkath</b></h1></div>
+					<div id="emptyUserNameContent" data-role="main" class="ui-content">
+						<p><b>Please type in your registered mobile number first</b></p>
+					</div>
+				  
+			 </div>
+			 
+			 <div id="noSuchUserName"  data-role="popup" data-overlay-theme="b" data-position-to="window">
+				
+					<div data-role="header"><h1><b>Paninkath</b></h1></div>
+					<div id="noSuchUserNameContent" data-role="main" class="ui-content">
+						<p><b>No account found with this mobile number</b></p>
+					</div>
+				  
+			 </div>
+			 
+			 <div id="noConnection"  data-role="popup" data-overlay-theme="b" data-position-to="window">
+				
+					<div data-role="header"><h1><b>Paninkath</b></h1></div>
+					<div id="noConnectionContent" data-role="main" class="ui-content">
+						<p><b>We couldn't connect to services, please check your internet connection</b></p>
+					</div>
+				  
+			 </div>
+			 
+			 <div id="unknownError"  data-role="popup" data-overlay-theme="b" data-position-to="window">
+				
+					<div data-role="header"><h1><b>Paninkath</b></h1></div>
+					<div id="unknownErrorContent" data-role="main" class="ui-content">
+						<p><b>We are not what happened there. Please report this at www.paninkath.com</b></p>
+					</div>
+				  
+			 </div>
+			 
+			 <div id="pwdUpdateSuccessful"  data-role="popup" data-overlay-theme="b" data-position-to="window">
+				
+					<div data-role="header"><h1><b>Paninkath</b></h1></div>
+					<div id="pwdUpdateSuccessfulContent" data-role="main" class="ui-content">
+						<p><b>Password updated successfully!</b></p>
+					</div>
+				  
+			 </div>
+			 
+			 
+			 <div id="incorrectTPWD"  data-role="popup" data-overlay-theme="b" data-position-to="window">
+				
+					<div data-role="header"><h1><b>Paninkath</b></h1></div>
+					<div id="incorrectTPWDContent" data-role="main" class="ui-content">
+						<p><b>Could not update password, you entered an incorrect temporary password. Try again!</b></p>
+					</div>
+				  
+			 </div>
+			 
+			 <!--POPUPS End-->
 			 <div id="social" class="social">
 				<a id="fbLogin" href="#login" data-role="button" data-transition="slide" data-direction="forward" changeHash="false">FB</a>
 			 </div>
@@ -205,12 +305,30 @@
 				<h1><b>PaninKath...</b></h1>
 		    </div>
 		   <div data-role="main" class="ui-content">
-		     <form id="signUpForm1" method="post" action="demoform.asp" class="signUpForm">
-				<input id="fName" type="text" name="fName" placeHolder="First Name"/>
-				<input id="lName" type="text" name="lName" placeHolder="Last Name" />
-				<input id="uEmail" type="email" name="uEmail" placeHolder="email" />
-				<input id="uMobile" type="number" name="uMobile" placeHolder="Mobile Number" />
+		     <form id="signUpForm1" method="post" class="signUpForm">
+			 	
+				<input id="nUNumber" type="number" name="nUNumber" placeHolder="Mobile Number" />
+				<a id="verifyMobile">Verify Number</a>
+				<input id="nUPwd" type="password" name="nUPwd" placeHolder="Password">
+				<input id="nUCPwd" type="password" name="nUCPwd" placeHolder="Confirm Password">
 			 </form>
+			 
+			 <div data-role="popup" id="verifyNumberPopup" data-overlay-theme="b" data-position-to="window">
+				
+					<div data-role="header"><h1><b>Paninkath</b></h1></div>
+					<br>
+					<p><b>Enter below the code received in SMS:</b></p>
+					
+					<div data-role="main" class="ui-content">
+						<form id="tempCodeForm">
+							<input id="vCode" type="number" name="vCode" placeHolder="Verification code" />
+							<a id="verifyCode" data-role="button" class="button" data-inline="true" changeHash="false">Done</a>
+						</form>
+					</div>
+					
+					<!--<div data-role="footer"><h1>Footer Text..</h1></div>-->
+				  
+				</div>
 
 	         <a href="#login" data-role="button" class="button" data-transition="slide" data-direction="reverse" data-inline="true" changeHash="false">Back</a> 
 			 <a id="next1" href="#signUp2" data-role="button" class="button" tabIndex="-1" data-transition="slide" data-direction="forward" data-inline="true" changeHash="false" enabled="false">Next</a>
@@ -224,9 +342,8 @@
 		    </div>
 		   <div data-role="main" class="ui-content">
 		     <form id="signUpForm2" method="post" action="demoform.asp" class="form">
-				<input id="nUName" type="text" name="nUName" placeHolder="User Name">
-				<input id="nUPwd" type="password" name="nUPwd" placeHolder="Password">
-				<input id="nUCPwd" type="password" name="nUCPwd" placeHolder="Confirm Password">
+				<input id="fName" type="text" name="fName" placeHolder="First Name"/>
+				<input id="lName" type="text" name="lName" placeHolder="Last Name" />
 			 </form>
 
 			 <a href="#signUp1" data-role="button" class="button" data-transition="slide" data-direction="reverse" data-inline="true" changeHash="false">Back</a> <!--data-inline="true" -->

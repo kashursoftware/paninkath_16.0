@@ -1,5 +1,10 @@
 var _validationStatus = {
 	
+	tempCodeForm:{
+		
+		vCode: false		
+	},
+	
 	updatePassword: {
 		
 		tmpPwd: false,
@@ -9,9 +14,10 @@ var _validationStatus = {
 	},
 	signUp1: {
 		
-		nUNumber:false,
+		nUName: false,
 		nUPwd:false,
-		nUCPwd: false
+		nUCPwd: false,
+		nUNumber:false
 	},
 	
 	signUp2: {
@@ -33,6 +39,29 @@ function updateValidationStatus(config){
 	var eventName = config.eventName;
 	
 	_validationStatus[formType][elementId] = isValid;
+	
+	if(formType == "signUp1"){
+		
+		if(elementId === "nUNumber"){
+			
+			if(window.verifiedNumber !== undefined){
+					
+				if(window.verifiedNumber.numbers.indexOf($("#"+elementId).val()) === -1){					
+					$("#verifyMobile").html("Verify Number");
+					enableLinkButton($("#verifyMobile"), true, $.proxy(verifyNumber,window));
+				}else{
+					
+					$("#verifyMobile").html("Number Verified");
+					enableLinkButton($("#verifyMobile"));
+					
+				}
+				
+			}
+			
+			
+			
+		}
+	}
 	
 	for(i in _validationStatus[formType]){
 		

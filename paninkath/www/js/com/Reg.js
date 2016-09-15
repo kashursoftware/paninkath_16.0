@@ -3,9 +3,10 @@ function registerUser(){
 	$.ajax({
 		url: "http://vps.hilfe.website:3800/addUser",
 		type: "get", //send it through get method
-		data:{"fName":$("#fName").val(),"lName": $("#lName").val(),"nUNumber":$("#nUNumber").val(),"passWord":$("#nUPwd").val(),"cPassWord":$("#nUCPwd").val()},
+		data:{"fName":$("#fName").val(),"lName": $("#lName").val(),"nUName":$("#nUName").val(),"nUNumber":$("#nUNumber").val(),"passWord":$("#nUPwd").val(),"cPassWord":$("#nUCPwd").val()},
 		success: function(response) {
 			console.log("sent......");
+			$("#loginMsg").html("Hey! Your account is created, Login now to get rolling!");
 		},
 		error: function(xhr) {
 			console.log(xhr);
@@ -15,7 +16,10 @@ function registerUser(){
 };
 
 
-function verifyNumber(){
+function verifyNumber(event){
+	
+	window.isCodeMatch = true;
+	
 	
 	var that = this;
 	
@@ -26,6 +30,12 @@ function verifyNumber(){
 		success: function(response) {
 			console.log("OTP Request Sent......");
 			that._sId = response.sId;
+			
+			$("#verifyNumberPopup").popup("open");
+			$("#vCode").focus();			
+			$("#vCode").val("");
+			event.preventDefault();
+			
 		},
 		error: function(xhr) {
 			console.log(xhr);
@@ -49,11 +59,18 @@ function validateCode(){
 			that.verifiedNumber.isNumberVerified = true;
 			$("#signUpForm1").validate().element("#nUNumber");
 			$("#nUNumber").focus();
+			window.isCodeMatch = true;
+			$("#verifyNumberPopup").popup( "close" );
+			$("#verifyMobile").html("Number Verified");
+			enableLinkButton($("#verifyMobile"));
 		},
 		error: function(xhr) {
 			console.log(xhr);
 			that.verifiedNumber.isNumberVerified = false;
-			$("#nUNumber").focus();
+			//$("#nUNumber").focus();
+			window.isCodeMatch = false;
+			$("#vCode").focus();
+			window.isCodeMatch = true;
 		}
 	}); 
 	
@@ -66,14 +83,6 @@ function validateCode(){
 		}
 	});
 	
-	$(this).bind({popupafteropen: function(event, ui) { 
-			
-			$("#vCode").focus();			
-			$("#vCode").val("");
-			
-		}
-	});
 	
-	$("#verifyNumberPopup").popup( "close" );
 	
 };

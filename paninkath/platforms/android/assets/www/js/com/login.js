@@ -1,11 +1,14 @@
-function loginUser(){
+function loginUser(event){
+	
 	
 	destroyToken();
+	
+	$("#loginMsg").html("");
 
 	$.ajax({
 		url: "http://vps.hilfe.website:3800/loginUser",
 		type: "get", //send it through get method
-		data:{"uName":$("#uName").val(),"pwd":$("#uPwd").val()},
+		data:{"uNumber":$("#uNumber").val(),"pwd":$("#uPwd").val()},
 		success: function(response) {
 			window.localStorage.setItem("token", response.token);
 			//trial();
@@ -13,6 +16,21 @@ function loginUser(){
 			onLoginSuccess(response);
 		},
 		error: function(xhr) {
+				
+			if(xhr.status === 401){
+					
+				$("#loginFailMessage").html("<p><b>The credentials entered by you are not correct</b></p>");
+			}else if(xhr.status === 0){
+				
+				$("#loginFailMessage").html("<p><b>Paninkath is not able to login. Please check your internet connection and try again</b></p>");
+			}else{
+				
+				$("#loginFailMessage").html("<p><b>Paninkath is not sure what's hapening here. Please report this at www.paninkath.com</b></p>");
+			}
+			
+			$("#failedToLogin").popup("open");
+			event.preventDefault();
+			
 			console.log(xhr);
 		}
 	});
@@ -40,7 +58,7 @@ function onLoginSuccess(response){
 	$( ":mobile-pagecontainer" ).on( "pagecontainerbeforechange", function( event, ui ) {
 		
 		var obj = jQuery.parseJSON(response.user);
-		$("#welmsg").text("Welcome to Paninkath "+obj.uName);
+		$("#welmsg").text("Welcome to Paninkath "+obj.fName);
 		
 	} );
 		
@@ -56,7 +74,7 @@ function autoLogin(){
 	}
 	
 	$.ajax({
-		url : "http://vps.hilfe.website:3800/welcomeUser",
+		url : "http://vps.hilfe.website:3800/validateLoggedInUser",
 		type: "get",
 		headers: {
 		'X-Auth-Token' : getToken()
@@ -96,4 +114,153 @@ function logoutUser(){
 	
 	destroyToken();
 	$( ":mobile-pagecontainer" ).pagecontainer( "change", "#login");
+};
+
+function getTmpPwd(event){
+	
+	var that = this;
+	
+	if($("#uNumber").val().length === 0){
+		
+		/*setTimeout(function(){ 
+			$("#emptyUserName").popup("open");return false; 
+			},0);*/
+			
+		/*$(document).bind("mobileinit", function() {
+			$("#emptyUserName").popup("open");
+		});*/
+		
+		$("#emptyUserName").popup("open");
+		
+		event.preventDefault();
+		
+		
+	}else{
+		
+		
+		$.ajax({
+			url: "http://vps.hilfe.website:3800/checkUserNameAvailability",
+			type: "get", //send it through get method,
+			data:{"phone":$("#uNumber").val()},
+			success: function(response) {
+				
+				$("#noSuchUserName").popup("open");
+				event.preventDefault();
+					
+			},
+			error: function(xhr) {
+				
+				if(xhr.status == 401){
+					
+					window.isSMSMatch = true;
+					$("#forgotPasswordPopup").popup("open");
+					event.preventDefault();
+					initializeToolipsterOnForm($('#updatePwdForm input'));
+					validateUpdatePwdForm();
+					getTemporaryPassword();
+					return false;
+					
+				}else if(xhr.status == 0){
+					
+					
+					$("#noConnection").popup("open");
+					event.preventDefault();
+					
+					
+				}else{
+					
+					$("#unknownError").popup("open");
+					event.preventDefault();
+					
+				}
+								
+				console.log(xhr);
+			}
+		});
+		
+	}
+	
+	
+};
+
+function getTemporaryPassword(){
+	
+	
+	$.ajax({
+		url: "http://vps.hilfe.website:3800/getTP",
+		type: "get", //send it through get method,
+		data:{"phone":$("#uNumber").val()},
+		success: function(response) {
+			console.log("TP Request Sent......");
+			that._sId = response.sId;
+		},
+		error: function(xhr) {
+			console.log(xhr);
+		}
+	}); 
+	
+};
+
+function updateNewPassword(event){
+	
+	var that = this;
+	
+	$.ajax({
+		url: "http://vps.hilfe.website:3800/validateTP",
+		type: "get", //send it through get method
+		data:{"tmpPwd":$("#tmpPwd").val(),"sId":that._sId},
+		success: function(response) {
+			console.log("OTP Verified");
+			performPasswordUpdate(event);
+		},
+		error: function(xhr) {
+			console.log(xhr);
+			that._incorrectTPWW = true;
+			window.isSMSMatch = false;
+			$("#tmpPwd").focus();
+			window.isSMSMatch = true;
+			
+			$("#forgotPasswordPopup").bind({popupafterclose: function(event, ui) { 
+					$("#forgotPasswordPopup input").val("");
+				}
+			});
+			
+		}
+	}); 
+	
+	
+	
+};
+
+function performPasswordUpdate(){
+	
+	$.ajax({
+		url: "http://vps.hilfe.website:3800/updatePassword",
+		type: "get", //send it through get method
+		data:{"newPwd":$("#newPwd").val(), "phone":$("#uNumber").val()},
+		success: function(response) {
+			console.log("Password updated");
+			$("#forgotPasswordPopup").popup("close");
+			
+			$("#forgotPasswordPopup").bind({popupafterclose: function(event, ui) { 
+			
+					$("#pwdUpdateSuccessful").popup("open");
+					event.preventDefault();
+					
+					$("#forgotPasswordPopup").unbind("popupafterclose");
+					
+					$("#forgotPasswordPopup input").val("");
+					return false;
+			
+				}
+			});
+
+			
+			//$("#forgotPassWordPopup").popup("close");
+		},
+		error: function(xhr) {
+			console.log(xhr);
+		}
+	});
+	
 };
