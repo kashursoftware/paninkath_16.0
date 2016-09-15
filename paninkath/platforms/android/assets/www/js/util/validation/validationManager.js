@@ -14,9 +14,10 @@ var _validationStatus = {
 	},
 	signUp1: {
 		
-		nUNumber:false,
+		nUName: false,
 		nUPwd:false,
-		nUCPwd: false
+		nUCPwd: false,
+		nUNumber:false
 	},
 	
 	signUp2: {

@@ -3,7 +3,7 @@ function registerUser(){
 	$.ajax({
 		url: "http://vps.hilfe.website:3800/addUser",
 		type: "get", //send it through get method
-		data:{"fName":$("#fName").val(),"lName": $("#lName").val(),"nUNumber":$("#nUNumber").val(),"passWord":$("#nUPwd").val(),"cPassWord":$("#nUCPwd").val()},
+		data:{"fName":$("#fName").val(),"lName": $("#lName").val(),"nUName":$("#nUName").val(),"nUNumber":$("#nUNumber").val(),"passWord":$("#nUPwd").val(),"cPassWord":$("#nUCPwd").val()},
 		success: function(response) {
 			console.log("sent......");
 			$("#loginMsg").html("Hey! Your account is created, Login now to get rolling!");
@@ -18,7 +18,6 @@ function registerUser(){
 
 function verifyNumber(event){
 	
-		
 	window.isCodeMatch = true;
 	
 	
@@ -33,6 +32,8 @@ function verifyNumber(event){
 			that._sId = response.sId;
 			
 			$("#verifyNumberPopup").popup("open");
+			$("#vCode").focus();			
+			$("#vCode").val("");
 			event.preventDefault();
 			
 		},
@@ -82,12 +83,6 @@ function validateCode(){
 		}
 	});
 	
-	$(this).bind({popupafteropen: function(event, ui) { 
-			
-			$("#vCode").focus();			
-			$("#vCode").val("");
-			
-		}
-	});
+	
 	
 };

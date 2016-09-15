@@ -157,7 +157,7 @@ function validateSignUp1(){
 		$.ajax({
 			url: "http://vps.hilfe.website:3800/checkUserNameAvailability",
 			type: "get", //send it through get method
-			data:{"phone":$(element).val()},
+			data:{"uName":$(element).val()},
 			async: false,
 			success: function(response) {
 				console.log("User name available");
@@ -173,7 +173,7 @@ function validateSignUp1(){
 		return isSuccess;
 		
 
-	}, "Number Already Taken");
+	}, "Username Already Taken");
 	
 	jQuery.validator.addMethod("verify", function(value, element) {
 		
@@ -213,13 +213,13 @@ function validateSignUp1(){
 		
 		rules: {
 			
-			nUNumber: {
+			nUName:{
+				
 				required: true,
-				number: true,
-				minlength: 10,
-				userAvailability: true,
-				verify: true
+				minlength: 2,
+				userAvailability: true
 			},
+
 			nUPwd: {
 				required: true,
 				minlength: 5,
@@ -227,16 +227,21 @@ function validateSignUp1(){
 			nUCPwd: {
 				required: true,
 				equalTo: "#nUPwd"
+			},
+			nUNumber: {
+				required: true,
+				number: true,
+				verify: true
 			}
 		},
 		messages: {
 			
-			nUNumber: {
-				required: "Enter mobile number ",
-				number: "Enter only numbers",
-				minlength: "Enter 10 digit number"
-			
+			nUName:{
+				
+				required: "Enter User Name",
+				minlength: "Username Too Short"
 			},
+			
 			nUPwd: {
 				required: "Enter password",
 				minlength: "Atleast 5 characters",
@@ -244,6 +249,11 @@ function validateSignUp1(){
 			nUCPwd: {
 				required: "Confirm password",
 				equalTo: "Passwords don't match"
+			},
+			nUNumber: {
+				required: "Enter mobile number ",
+				number: "Enter only numbers"
+			
 			}
 			
 		},errorPlacement: function (error, element) {

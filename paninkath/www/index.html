@@ -103,7 +103,30 @@
 			
 		});
 		
-		$(document).on( "pageshow","#home" ,function( event, ui ) {
+		$(document).on( "pagecreate","#home" ,function( event, ui ) {
+		
+			
+		   /*$( "#myPanel" ).on( "panelclose", function( event, ui ) {
+		   
+				$("#logoutPopup").popup();
+				$("#logoutPopup").popup("open");
+				//event.preventDefault();
+				
+				$("#logoutYes").on("tap",function(){
+				
+					logoutUser();
+				
+				});
+				
+				$("#logoutNo").on("tap",function(){
+					
+					$("#logoutPopup").popup("close");
+				});
+				
+				
+		   });*/
+		   
+		   
 			$("#logoutLink").on("tap",logoutUser);			
 		});
 		
@@ -223,6 +246,20 @@
 			 </form>
 			 
 			 <!-- POPUPS-->
+			 
+			<div id="logoutPopup"  data-role="popup" data-overlay-theme="a" data-position-to="window">
+				
+					<div id="logoutPopupContent" data-role="main" class="ui-content">
+					
+						<div data-role="header"><h3><b>Logout?</b></h3></div>
+						<div><p>Are you sure you want to logout?</p></div>
+						<button id="logoutYes">Yes</button>
+						<button id="logoutNo">No</button>
+						
+					</div>
+				  
+			 </div>
+			
 			 <div id="failedToLogin" data-role="popup" data-overlay-theme="b" data-position-to="window">
 				
 				<div data-role="header"><h1><b>Paninkath</b></h1></div>
@@ -367,26 +404,41 @@
 	
 			<div data-role="panel" id="myPanel" data-display="overlay">
 					<h3>Menu</h3><br>
+
 					<ul data-role="listview">
 						<li><a href="#home" >My Profile</a></li>
+						<li><a href="#home">Search People</a></li>
 						<li><a href="#home">Settings</a></li>
 						<li><a href="#home">Preferences</a></li>
 						<li><a href="#home">Security</a></li>
-						<li><a id="logoutLink" href="#">Logout</a></li>
+						<li><a id="logoutLink" href="#" data-transition="slide">Logout</a></li>
 					</ul>
 			</div>
 			
-			<div data-role="header">
-				<h1><b>PaninKath...</b></h1>
-				
+			<div data-role="header" data-position="fixed">
+				<a href="#myPanel" class="ui-btn ui-corner-all ui-icon-bars ui-btn-icon-notext ui-btn-a"></a>
+				<a href="#" class="ui-btn ui-corner-all ui-icon-home ui-btn-icon-notext">Home Icon</a>
+				<h1><b>PaninKath</b></h1>
 		    </div>
+			
+			<div data-role="footer" style="text-align:center;" data-position="fixed" >
+				<!--<div data-role="controlgroup" data-type="horizontal">-->
+				  
+				  <!--<a href="#" class="ui-btn ui-btn-inline ui-icon-search ui-btn-icon-notext ui-corner-all ui-shadow ui-nodisc-icon ui-alt-icon">Black icon</a>-->
+				  <a href="#" class="ui-btn ui-corner-all ui-icon-video ui-btn-icon-notext">Video Icon</a>
+				  <a href="#" class="ui-btn ui-corner-all ui-icon-phone ui-btn-icon-notext">Phone Icon</a>				  				 
+				  <a href="#" class="ui-btn ui-corner-all ui-icon-user ui-btn-icon-notext">User Icon</a>
+				  <a href="#" class="ui-btn ui-corner-all ui-icon-heart ui-btn-icon-notext">Heart Icon</a>
+				  <a href="#" class="ui-btn ui-corner-all ui-icon-comment ui-btn-icon-notext">Chats</a>
+				  
+				 <!--</div>-->
+			</div>
 			
 			
 			
 		   <div data-role="main" class="ui-content">
-		   <a href="#myPanel" class="ui-btn ui-corner-all ui-icon-bars ui-btn-icon-notext ui-btn-b"></a>
-			
-			
+		   
+						
 		   </div>
 	</div>
 	

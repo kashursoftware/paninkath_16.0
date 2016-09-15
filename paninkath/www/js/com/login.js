@@ -116,6 +116,18 @@ function logoutUser(){
 	$( ":mobile-pagecontainer" ).pagecontainer( "change", "#login");
 };
 
+function openLogoutDialog(event){
+	
+	
+	//$("#logoutPopup").popup();
+	//$("#logoutPopup").popup("open");
+	//event.preventDefault();
+	
+	$( "#myPanel" ).panel( "close" );
+	
+
+};
+
 function getTmpPwd(event){
 	
 	var that = this;

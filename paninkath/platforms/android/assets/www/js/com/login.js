@@ -8,7 +8,7 @@ function loginUser(event){
 	$.ajax({
 		url: "http://vps.hilfe.website:3800/loginUser",
 		type: "get", //send it through get method
-		data:{"uNumber":$("#uNumber").val(),"pwd":$("#uPwd").val()},
+		data:{"uName":$("#uName").val(),"pwd":$("#uPwd").val()},
 		success: function(response) {
 			window.localStorage.setItem("token", response.token);
 			//trial();
@@ -116,19 +116,23 @@ function logoutUser(){
 	$( ":mobile-pagecontainer" ).pagecontainer( "change", "#login");
 };
 
+function openLogoutDialog(event){
+	
+	
+	//$("#logoutPopup").popup();
+	//$("#logoutPopup").popup("open");
+	//event.preventDefault();
+	
+	$( "#myPanel" ).panel( "close" );
+	
+
+};
+
 function getTmpPwd(event){
 	
 	var that = this;
 	
-	if($("#uNumber").val().length === 0){
-		
-		/*setTimeout(function(){ 
-			$("#emptyUserName").popup("open");return false; 
-			},0);*/
-			
-		/*$(document).bind("mobileinit", function() {
-			$("#emptyUserName").popup("open");
-		});*/
+	if($("#uName").val().length === 0){
 		
 		$("#emptyUserName").popup("open");
 		
@@ -141,7 +145,7 @@ function getTmpPwd(event){
 		$.ajax({
 			url: "http://vps.hilfe.website:3800/checkUserNameAvailability",
 			type: "get", //send it through get method,
-			data:{"phone":$("#uNumber").val()},
+			data:{"uName":$("#uName").val()},
 			success: function(response) {
 				
 				$("#noSuchUserName").popup("open");
@@ -189,7 +193,7 @@ function getTemporaryPassword(){
 	$.ajax({
 		url: "http://vps.hilfe.website:3800/getTP",
 		type: "get", //send it through get method,
-		data:{"phone":$("#uNumber").val()},
+		data:{"uName":$("#uName").val()},
 		success: function(response) {
 			console.log("TP Request Sent......");
 			that._sId = response.sId;
@@ -237,7 +241,7 @@ function performPasswordUpdate(){
 	$.ajax({
 		url: "http://vps.hilfe.website:3800/updatePassword",
 		type: "get", //send it through get method
-		data:{"newPwd":$("#newPwd").val(), "phone":$("#uNumber").val()},
+		data:{"newPwd":$("#newPwd").val(), "uName":$("#uName").val()},
 		success: function(response) {
 			console.log("Password updated");
 			$("#forgotPasswordPopup").popup("close");
