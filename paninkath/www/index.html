@@ -51,6 +51,9 @@
 	<script src="js/util/validation/validationRules.js"></script>
 	
 	
+
+	
+	
 	
 
 	<script>
@@ -177,6 +180,15 @@
 			});
 		
 		};
+		
+		$(document).on("pagecreate","#home",function(){
+		
+			   $("#showSideMenu").on("tap",function(){
+			   
+			   
+			   });
+
+		});
 		
 		function onDeviceReady(){
 		
@@ -352,14 +364,37 @@
 
 
 	<div id="home" class="home" data-role="page">
+	
+			<div data-role="panel" id="myPanel" data-display="overlay">
+					<h3>Menu</h3><br>
+					<ul data-role="listview">
+						<li><a href="#home" >My Profile</a></li>
+						<li><a href="#home">Settings</a></li>
+						<li><a href="#home">Preferences</a></li>
+						<li><a href="#home">Security</a></li>
+						<li><a id="logoutLink" href="#">Logout</a></li>
+					</ul>
+			</div>
+			
 			<div data-role="header">
 				<h1><b>PaninKath...</b></h1>
+				
 		    </div>
+			
+			
+			
 		   <div data-role="main" class="ui-content">
-			<h1 id="welmsg"> Successfully Logged In</h1>
-			<a id="logoutLink">logout</a>
+		   <a href="#myPanel" class="ui-btn ui-corner-all ui-icon-bars ui-btn-icon-notext ui-btn-b"></a>
+			
+			
 		   </div>
 	</div>
+	
+	
+
+	
+	<!-- Side Menu -->
+
 
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
