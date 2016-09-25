@@ -11,6 +11,7 @@ function loginUser(event){
 		data:{"uName":$("#uName").val(),"pwd":$("#uPwd").val()},
 		success: function(response) {
 			window.localStorage.setItem("token", response.token);
+			window.localStorage.setItem("userInfo", response.user);
 			//trial();
 			
 			onLoginSuccess(response);
@@ -55,12 +56,12 @@ function onFBLogin(){
 
 function onLoginSuccess(response){
 		
-	$( ":mobile-pagecontainer" ).on( "pagecontainerbeforechange", function( event, ui ) {
+	/*$( ":mobile-pagecontainer" ).on( "pagecontainerbeforechange", function( event, ui ) {
 		
 		var obj = jQuery.parseJSON(response.user);
 		$("#welmsg").text("Welcome to Paninkath "+obj.fName);
 		
-	} );
+	} );*/
 		
 	$( ":mobile-pagecontainer" ).pagecontainer( "change", "#home");
 		
@@ -112,17 +113,13 @@ function destroyToken(){
 
 function logoutUser(){
 	
+	window.location.reload(true);
 	destroyToken();
-	$( ":mobile-pagecontainer" ).pagecontainer( "change", "#login");
+	 $( ":mobile-pagecontainer" ).pagecontainer( "change", "#login");
 };
 
 function openLogoutDialog(event){
-	
-	
-	//$("#logoutPopup").popup();
-	//$("#logoutPopup").popup("open");
-	//event.preventDefault();
-	
+		
 	$( "#myPanel" ).panel( "close" );
 	
 

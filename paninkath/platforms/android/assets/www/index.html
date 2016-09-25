@@ -38,6 +38,7 @@
     <!--<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; connect-src http://vps.hilfe.website:3800 https://2factor.in">-->
 	<!--<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; connect-src https://2factor.in">-->
     <link rel="stylesheet" type="text/css" href="css/index.css" />
+	<link rel="newest stylesheet" type="text/css" href="css/styles.css" />
 	<link rel="stylesheet" href="js/libs/jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.css">
 	<script src="js/libs/jquery.mobile-1.4.5/jquery-1.11.3.min.js"></script>
 	<script src="js/libs/jquery.mobile-1.4.5/jquery.mobile-1.4.5.js"></script>
@@ -49,24 +50,19 @@
 	<script src="js/com/login.js"></script>
 	<script src="js/util/validation/validationManager.js"></script>
 	<script src="js/util/validation/validationRules.js"></script>
-	
-	
-
-	
-	
-	
+	<script src="js/com/search/search.js"></script>
+	<script src="js/com/profile/profileManager.js"></script>
+	<script src="js/util/imageupload/imageUploader.js"></script>
 
 	<script>
 	
 		var that = this;
+		var oProfileManager;
 		document.addEventListener("deviceready", onDeviceReady, false);
 
 
 		$(document).on("pagecreate","#login",function(){
 			  			   
-			 //initializeToolipsterOnForm($('#loginForm input'));
-			 //validateLogin();
-			
 			 $("#loginBtn").on("tap",loginUser);
 			  
 			  $("#forgotPassword").on("tap",$.proxy(getTmpPwd,that));
@@ -105,29 +101,64 @@
 		
 		$(document).on( "pagecreate","#home" ,function( event, ui ) {
 		
+			$("#searchWrapper").hide();
 			
-		   /*$( "#myPanel" ).on( "panelclose", function( event, ui ) {
+			var oSearch = new Search();
+			oSearch.setResultHolder($("#searchResult"));
+			
+		    $("#userListBtn").on("tap",function(){
+			
+				oProfileManager.hideMyProfile();
+				$("#searchWrapper").show();
+				oSearch.showSearchPage();
+			});
+			$("#searchField").on("keyup",$.proxy(oSearch.searchPeople,oSearch));
+			$("#searchField").on("change",$.proxy(oSearch.searchCleared,oSearch));
+			
+			
+			$("#searchPeopleLink").on("tap",function(){
+				
+				oProfileManager.hideMyProfile();
+				$("#searchWrapper").show();
+				oSearch.showSearchPage();
+			});
+			
+			
+			$("#homeBtn").on("tap",function(){
+			
+				$("#searchWrapper").hide();
+				oProfileManager.showMyProfile();
+			});
 		   
-				$("#logoutPopup").popup();
-				$("#logoutPopup").popup("open");
-				//event.preventDefault();
-				
-				$("#logoutYes").on("tap",function(){
-				
-					logoutUser();
-				
-				});
-				
-				$("#logoutNo").on("tap",function(){
-					
-					$("#logoutPopup").popup("close");
-				});
-				
-				
-		   });*/
 		   
-		   
-			$("#logoutLink").on("tap",logoutUser);			
+			$("#logoutLink").on("tap",logoutUser);	
+			
+			oProfileManager = new ProfileManager();
+			oProfileManager.setProfileHolder($("#profileContainer"));
+			oProfileManager.setUserFullName($("#userFullName"));
+			
+			
+
+			$("#myProfileLink").on("tap",function(){
+			
+				$("#searchWrapper").hide();
+				oProfileManager.showMyProfile();
+			});
+			
+			var oImageUploader = new ImageUploader();
+			
+			$("#displayPic").on("tap",function(){
+				
+				oImageUploader.browseImage();
+
+			});
+		});
+		
+		$(document).on("pageshow","#home",function(event,data){
+		
+			$("#searchWrapper").hide();
+			oProfileManager.showMyProfile();
+		
 		});
 		
 		$(document).on("pagecreate","#signUp1",function(){//
@@ -406,33 +437,82 @@
 					<h3>Menu</h3><br>
 
 					<ul data-role="listview">
-						<li><a href="#home" >My Profile</a></li>
-						<li><a href="#home">Search People</a></li>
-						<li><a href="#home">Settings</a></li>
-						<li><a href="#home">Preferences</a></li>
-						<li><a href="#home">Security</a></li>
-						<li><a id="logoutLink" href="#" data-transition="slide">Logout</a></li>
+						<li><a id="myProfileLink" href="#home" data-rel="close">My Profile</a></li>
+						<li><a id="searchPeopleLink" data-rel="close" href="#home">Search People</a></li>
+						<li><a href="#home" data-rel="close">Settings</a></li>
+						<li><a href="#home" data-rel="close">Preferences</a></li>
+						<li><a href="#home" data-rel="close">Security</a></li>
+						<li><a id="logoutLink" href="#" data-rel="close" data-transition="slide">Logout</a></li>
 					</ul>
 			</div>
 			
 			<div data-role="header" data-position="fixed">
-				<a href="#myPanel" class="ui-btn ui-corner-all ui-icon-bars ui-btn-icon-notext ui-btn-a"></a>
-				<a href="#" class="ui-btn ui-corner-all ui-icon-home ui-btn-icon-notext">Home Icon</a>
+				<a href="#myPanel" class="ui-btn ui-corner-all ui-icon-bars ui-btn-icon-notext ui-btn-a"></a>				
+				<a id="homeBtn" href="#" class="ui-btn ui-corner-all ui-icon-home ui-btn-icon-notext">Home Icon</a>
 				<h1><b>PaninKath</b></h1>
 		    </div>
+			
+			<div id="appContent">
+			
+				<!-- Search Start -->
+				<div id="searchWrapper" style="max-width:80%, margin: auto;padding: 5px;">
+					<input id="searchField" type="search" name="firstname" placeHolder="Search People">
+					<div id="searchResultWrapper" style="width: 100%; height: 100%; overflow-y: scroll;overflow-x:hidden;">
+						<ul id="searchResult" data-role="listview">
+						</ul>
+					</div>
+				</div>	
+				
+				<!-- Search End -->
+				
+				<div id="profileWrapper" style="max-width:80%, margin: auto;padding: 5px;">
+					<div id="profileContainer">
+						
+						<!--<div class="image-upload">
+							<label for="file-input">
+								<img src="placeholder.jpg" style="min-width:300px"/>
+							</label>
+
+							<input id="file-input" type="file" style="display: none"/>
+						</div>-->
+						<!--<img src="placeholder.jpg"/>-->
+						<div class="profilePic">
+                            <div class="profilePhoto">
+                                <img id="displayPic" data-inline="true" width="80%" height="80%" src="./img/defaultProfilePic.png" alt=""/>
+                                <button id="btnUpload" data-inline="true" class="iconBtn btnUpload" >
+                                <span aria-hidden="true" class="glyphicon glyphicon-pencil"></span>
+                                </button>
+                            </div>
+                        </div>
+
+						<h2 id="userFullName"></h2>
+						<textarea rows="4" cols="50" maxlength="100">Life is precious, cherish it</textarea>
+					</div>
+				</div>
+				
+				<!--Profile Start -->
+				
+				
+			</div>
+			
+				
+			
 			
 			<div data-role="footer" style="text-align:center;" data-position="fixed" >
 				<!--<div data-role="controlgroup" data-type="horizontal">-->
 				  
-				  <!--<a href="#" class="ui-btn ui-btn-inline ui-icon-search ui-btn-icon-notext ui-corner-all ui-shadow ui-nodisc-icon ui-alt-icon">Black icon</a>-->
+				  
 				  <a href="#" class="ui-btn ui-corner-all ui-icon-video ui-btn-icon-notext">Video Icon</a>
 				  <a href="#" class="ui-btn ui-corner-all ui-icon-phone ui-btn-icon-notext">Phone Icon</a>				  				 
-				  <a href="#" class="ui-btn ui-corner-all ui-icon-user ui-btn-icon-notext">User Icon</a>
+				  <a href="#" id="userListBtn" class="ui-btn ui-corner-all ui-icon-user ui-btn-icon-notext">User Icon</a>
 				  <a href="#" class="ui-btn ui-corner-all ui-icon-heart ui-btn-icon-notext">Heart Icon</a>
 				  <a href="#" class="ui-btn ui-corner-all ui-icon-comment ui-btn-icon-notext">Chats</a>
+				  <!--<a href="#" id="peopleSearch" class="ui-btn ui-btn-inline ui-icon-search ui-btn-icon-notext ui-corner-all ui-shadow ui-nodisc-icon ui-alt-icon">Search icon</a>-->
 				  
 				 <!--</div>-->
 			</div>
+			
+			
 			
 			
 			
@@ -445,7 +525,6 @@
 	
 
 	
-	<!-- Side Menu -->
 
 
     <script type="text/javascript" src="cordova.js"></script>
