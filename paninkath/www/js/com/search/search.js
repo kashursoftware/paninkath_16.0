@@ -91,10 +91,12 @@ Search.prototype.createSearchList = function(){
 		
 		for(var i=0;i<this.resultSet.list.length;i++){
 			
-				htmlSnippet += "<li class='ui-li-static ui-body-inherit ui-first-child ui-last-child'>"+this.resultSet.list[i].fName + " "+ this.resultSet.list[i].lName+"</li>";
+				htmlSnippet += "<li class='ui-li-has-thumb ui-first-child'><a href='#' class='ui-btn ui-btn-icon-right ui-icon-carat-r'><img src="+this.resultSet.list[i].uPic+">"+this.resultSet.list[i].fName + " "+ this.resultSet.list[i].lName+"</a></li>";
 		}
+		
 		
 	}
 	this._resultHolder.html(htmlSnippet);
+	this._resultHolder.listview().listview('refresh');
 
 };

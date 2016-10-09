@@ -54,13 +54,20 @@ ImageUploader.prototype.failSystem = function(fileEntry){
 
 ImageUploader.prototype.uploadToMidtier = function(event){
 	
+	var currenetDateAndTime = new Date($.now());
+	
+	
 	$.ajax({
 			url: "http://vps.hilfe.website:3800/updateProfilePic",
 			type: "get", //send it through get method,
-			data:{"displayPic":event.target.result},
+			headers: {
+				'X-Auth-Token' : window.localStorage.getItem("token")
+			},
+			data:{"displayPic":event.target.result,"picUploadDateAndTime":device.uuid},
 			success: function(response) {
 				
 				console.log("pic uploaded");
+				
 			},
 			error: function(xhr) {
 				
