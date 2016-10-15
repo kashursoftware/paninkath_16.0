@@ -50,6 +50,8 @@ ProfileManager.prototype.fetchProfilePic = function(ref){
 };
 
 ProfileManager.prototype.showMyProfile = function(ref){
+	
+	$("#profileContainer").addClass("ownProfile");
 	var userObj = window.localStorage.getItem("userInfo");
 	var userInfo = jQuery.parseJSON(userObj);
 	
@@ -81,3 +83,14 @@ ProfileManager.prototype.setdisplayPic = function(ref){
 	this._displayPic = ref;
 	
 };
+
+ProfileManager.prototype.setQuote = function(ref){
+	
+	this._quote = ref;
+	
+	$(this._quote).on("taphold",function(){
+		$(this._quote).removeAttr("readonly");
+	});
+	
+};
+

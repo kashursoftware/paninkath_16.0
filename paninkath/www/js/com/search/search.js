@@ -81,7 +81,8 @@ Search.prototype.searchPeople = function(event){
 
 Search.prototype.createSearchList = function(){
 	
-	var htmlSnippet = "";
+	var htmlSnippet = "", that=this;
+	$("#searchResult li").off("tap");
 	
 	if(this.resultSet.list.length === 0){
 		
@@ -91,12 +92,29 @@ Search.prototype.createSearchList = function(){
 		
 		for(var i=0;i<this.resultSet.list.length;i++){
 			
-				htmlSnippet += "<li class='ui-li-has-thumb ui-first-child'><a href='#' class='ui-btn ui-btn-icon-right ui-icon-carat-r'><img src="+this.resultSet.list[i].uPic+">"+this.resultSet.list[i].fName + " "+ this.resultSet.list[i].lName+"</a></li>";
+				//(this.resultSet.list[i]).data_usr="usr-"+i;			
+				
+				if(this.resultSet.list[i].uPic === undefined){
+					
+					this.resultSet.list[i].uPic = "./img/defaultProfilePic.png";
+				}
+				
+				if(this.resultSet.list[i].uName !== jQuery.parseJSON(window.localStorage.getItem("userInfo")).uName){
+					
+					htmlSnippet += "<li class='ui-li-has-thumb ui-first-child' data-usr="+i+"><a href='#' class='ui-btn ui-btn-icon-right ui-icon-carat-r'><img src="+this.resultSet.list[i].uPic+">"+this.resultSet.list[i].fName + " "+ this.resultSet.list[i].lName+"</img></a></li>";
+				}
+					
 		}
 		
 		
 	}
 	this._resultHolder.html(htmlSnippet);
 	this._resultHolder.listview().listview('refresh');
+	
+	$("#searchResult li").on("tap",function(event){
+		
+		console.log("tapped....."+($(event.currentTarget).attr("data-usr")));
+		$(that).trigger("SHOW_USERPROFILE",[that.resultSet.list[$(event.currentTarget).attr("data-usr")]]);
+	});
 
 };
