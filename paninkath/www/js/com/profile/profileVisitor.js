@@ -23,7 +23,6 @@ ProfileVisitor.prototype.setProfileHolder = function(ref){
 
 ProfileVisitor.prototype.showUserProfile = function(){
 	
-	$("#profileContainer").removeClass("ownProfile");
 	this._profileHolder.show();
 	this._userFullName.html(this._data.fName + " " +this._data.lName);
 	
@@ -32,6 +31,7 @@ ProfileVisitor.prototype.showUserProfile = function(){
 		this._data.uPic = "./img/defaultProfilePic.png";
 	}
 	this._displayPic.attr("src",this._data.uPic);
+	this._userFullNameHeader.html("<b>"+this._data.fName+" "+this._data.lName+"</b>");
 };
 
 ProfileVisitor.prototype.hideUserProfile = function(ref){
@@ -45,6 +45,14 @@ ProfileVisitor.prototype.setUserFullName = function(ref){
 	this._userFullName = ref;
 	
 };
+
+ProfileVisitor.prototype.setUserFullNameHeader = function(ref){
+	
+	this._userFullNameHeader = ref;
+	
+};
+
+
 
 ProfileVisitor.prototype.setdisplayPic = function(ref){
 	

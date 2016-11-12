@@ -60,6 +60,7 @@
 		var that = this;
 		var oProfileManager;
 		var oProfileVisitor;
+		var oSearch;
 		document.addEventListener("deviceready", onDeviceReady, false);
 
 
@@ -101,29 +102,20 @@
 			
 		});
 		
-		$(document).on( "pagecreate","#home" ,function( event, ui ) {
-		
-			$("#searchWrapper").hide();
+		$(document).on( "pagecreate","#searchPage" ,function( event, ui ) {
 			
-			var oSearch = new Search();
+			oSearch = new Search();
 			oSearch.setResultHolder($("#searchResult"));
 			
 			$(oSearch).on("SHOW_USERPROFILE",function(event,data){
 			
 				console.log("Listening....");
-				$("#searchWrapper").hide();
+				
 				oProfileVisitor.setUserData(data);
 			
 			});
 			
 			
-			
-		    $("#userListBtn").on("tap",function(){
-			
-				oProfileManager.hideMyProfile();
-				$("#searchWrapper").show();
-				oSearch.showSearchPage();
-			});
 			$("#searchField").on("keyup",$.proxy(oSearch.searchPeople,oSearch));
 			$("#searchField").on("change",function(){
 			
@@ -135,14 +127,24 @@
 			$("#searchPeopleLink").on("tap",function(){
 				
 				oProfileManager.hideMyProfile();
-				$("#searchWrapper").show();
+				$( ":mobile-pagecontainer" ).pagecontainer( "change", "#searchPage");
+				oSearch.showSearchPage();
+			});
+		});
+		
+		$(document).on( "pagecreate","#home" ,function( event, ui ) {
+			
+			
+			
+			$("#userListBtn").on("tap",function(){
+			
+				oProfileManager.hideMyProfile();
+				$( ":mobile-pagecontainer" ).pagecontainer( "change", "#searchPage");
 				oSearch.showSearchPage();
 			});
 			
-			
 			$("#homeBtn").on("tap",function(){
 			
-				$("#searchWrapper").hide();
 				oProfileManager.showMyProfile();
 			});
 		   
@@ -157,13 +159,12 @@
 			
 			
 			oProfileVisitor = new ProfileVisitor();
-			oProfileVisitor.setProfileHolder($("#profileContainer"));
-			oProfileVisitor.setUserFullName($("#userFullName"));
-			oProfileVisitor.setdisplayPic($("#displayPic"));
+			oProfileVisitor.setProfileHolder($("#visitedProfileContainer"));
+			oProfileVisitor.setUserFullName($("#visitedUserFullName"));
+			oProfileVisitor.setdisplayPic($("#visitedDisplayPic"));
 
 			$("#myProfileLink").on("tap",function(){
 			
-				$("#searchWrapper").hide();
 				oProfileManager.showMyProfile();
 			});
 			
@@ -182,7 +183,6 @@
 		
 		$(document).on("pageshow","#home",function(event,data){
 		
-			$("#searchWrapper").hide();
 			oProfileManager.showMyProfile();
 		
 		});
@@ -393,6 +393,28 @@
 				  
 			 </div>
 			 
+				<!-- <div id="quote"  data-role="popup" data-overlay-theme="a" data-position-to="window">
+				
+					<div id="logoutPopupContent" data-role="main" class="ui-content">
+					
+						<div data-role="header"><h3><b>Logout?</b></h3></div>
+						<div><p>Are you sure you want to logout?</p></div>
+						<button id="logoutYes">Yes</button>
+						<button id="logoutNo">No</button>
+						
+					</div>
+					GCM:
+					AIzaSyBmaQ9uJdr1wDWZj3QB1oP1tUz2Iexc8k4
+					
+					AWS:
+					Access Key ID:
+					AKIAJ6LIPI5I3Y7GQGBQ
+					Secret Access Key:
+					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
+
+				  
+			 </div>-->
+			 
 			 <!--POPUPS End-->
 			 <div id="social" class="social">
 				<a id="fbLogin" href="#login" data-role="button" data-transition="slide" data-direction="forward" changeHash="false">FB</a>
@@ -429,8 +451,6 @@
 							<a id="verifyCode" data-role="button" class="button" data-inline="true" changeHash="false">Done</a>
 						</form>
 					</div>
-					
-					<!--<div data-role="footer"><h1>Footer Text..</h1></div>-->
 				  
 				</div>
 
@@ -480,17 +500,6 @@
 			
 			<div id="appContent">
 			
-				<!-- Search Start -->
-				<div id="searchWrapper" style="max-width:80%, margin: auto;padding: 5px;">
-					<input id="searchField" type="search" name="firstname" placeHolder="Search People" style="max-height:80%">
-					<div id="searchResultWrapper">
-						<ul id="searchResult" data-role="listview" data-inset="true" class="ui-listview ui-listview-inset ui-corner-all ui-shadow" style="max-height:100%;top:0;overflow: auto;-webkit-overflow-scrolling:touch;">
-						</ul>
-					</div>
-				</div>	
-				
-				<!-- Search End -->
-				
 				<div id="profileWrapper" style="max-width:80%, margin: auto;padding: 5px;">
 					<div id="profileContainer">
 						
@@ -508,26 +517,14 @@
 					</div>
 				</div>
 				
-				<!--Profile Start -->
-				
-				
 			</div>
 			
-				
-			
-			
 			<div data-role="footer" style="text-align:center;position: fixed;bottom: 0;left: 0;right: 0;" data-position="fixed">
-				<!--<div data-role="controlgroup" data-type="horizontal">-->
-				  
-				  
 				  <a href="#" class="ui-btn ui-corner-all ui-icon-video ui-btn-icon-notext">Video Icon</a>
 				  <a href="#" class="ui-btn ui-corner-all ui-icon-phone ui-btn-icon-notext">Phone Icon</a>				  				 
-				  <a href="#" id="userListBtn" class="ui-btn ui-corner-all ui-icon-user ui-btn-icon-notext">User Icon</a>
+				  <a href="#" id="userListBtn" class="ui-btn ui-corner-all ui-icon-search ui-btn-icon-notext">Search</a>
 				  <a href="#" class="ui-btn ui-corner-all ui-icon-heart ui-btn-icon-notext">Heart Icon</a>
 				  <a href="#" class="ui-btn ui-corner-all ui-icon-comment ui-btn-icon-notext">Chats</a>
-				  <!--<a href="#" id="peopleSearch" class="ui-btn ui-btn-inline ui-icon-search ui-btn-icon-notext ui-corner-all ui-shadow ui-nodisc-icon ui-alt-icon">Search icon</a>-->
-				  
-				 <!--</div>-->
 			</div>
 			
 			
@@ -540,10 +537,44 @@
 		   </div>
 	</div>
 	
+	<div id="searchPage" data-role="page">
 	
-
+		<div data-role="header" data-position="fixed" style="text-align:center;position: fixed;top: 0;left: 0;right: 0;">
+			<a data-rel="back" class="ui-btn ui-corner-all ui-icon-back ui-btn-icon-notext">Back Button</a>
+			<a id="homeBtn" href="#home" class="ui-btn ui-corner-all ui-icon-home ui-btn-icon-notext">Home Icon</a>
+			<h1><b>Search People</b></h1>
+	    </div>
+		
+		<div style="max-width:80%, margin: auto;padding: 5px;">
+			<input id="searchField" type="search" name="firstname" placeHolder="Search People" style="max-width:80%">
+			
+			<div id="searchResultWrapper">
+				<ul id="searchResult" data-role="listview" data-inset="true" class="ui-listview ui-listview-inset ui-corner-all ui-shadow" style="max-height:100%;top:0;overflow: auto;-webkit-overflow-scrolling:touch;">
+				</ul>
+			</div>
+		</div>
+		
+		
+	</div>
 	
-
+	<div id="visitedProfilePage" data-role="page">
+	
+		<div data-role="header" data-position="fixed" style="text-align:center;position: fixed;top: 0;left: 0;right: 0;">
+			<a data-rel="back" class="ui-btn ui-corner-all ui-icon-back ui-btn-icon-notext">Back Button</a>
+			<a id="homeBtn" href="#home" class="ui-btn ui-corner-all ui-icon-home ui-btn-icon-notext">Home Icon</a>
+			<h1 id="visitedUserFName"></h1>
+	    </div>
+	
+		<div id="visitedProfileContainer" style="max-width:80%, margin: auto;padding: 5px;">
+			
+			<div class="profilePic">
+					<img id="visitedDisplayPic" data-inline="true" width="80%" height="80%" src="./img/defaultProfilePic.png" alt=""/>
+			</div>
+			
+			<h2 id="visitedUserFullName"></h2>
+			<textarea id="visitedQuoteTxtArea" rows="4" cols="50" maxlength="100" readonly>Share a quote..</textarea>
+		</div>
+	</div>
 
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="js/index.js"></script>

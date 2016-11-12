@@ -114,6 +114,7 @@ Search.prototype.createSearchList = function(){
 	$("#searchResult li").on("tap",function(event){
 		
 		console.log("tapped....."+($(event.currentTarget).attr("data-usr")));
+		$( ":mobile-pagecontainer" ).pagecontainer( "change", "#visitedProfilePage");
 		$(that).trigger("SHOW_USERPROFILE",[that.resultSet.list[$(event.currentTarget).attr("data-usr")]]);
 	});
 
