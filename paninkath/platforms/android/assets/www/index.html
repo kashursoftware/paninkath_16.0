@@ -54,6 +54,8 @@
 	<script src="js/com/profile/profileManager.js"></script>
 	<script src="js/com/profile/profileVisitor.js"></script>
 	<script src="js/util/imageupload/imageUploader.js"></script>
+	<script src="js/com/friends/friendRequestManager.js"></script>
+	
 
 	<script>
 	
@@ -61,6 +63,7 @@
 		var oProfileManager;
 		var oProfileVisitor;
 		var oSearch;
+		var oFriendRequestManager;
 		document.addEventListener("deviceready", onDeviceReady, false);
 
 
@@ -107,10 +110,18 @@
 			oSearch = new Search();
 			oSearch.setResultHolder($("#searchResult"));
 			
+			
+			
+			$(oSearch).on("FRIEND_REQUEST",function(event,data){
+			
+				console.log("FRIEND_REQUEST....");
+				oFriendRequestManager.setData(data);
+				
+			
+			});
+			
 			$(oSearch).on("SHOW_USERPROFILE",function(event,data){
 			
-				console.log("Listening....");
-				
 				oProfileVisitor.setUserData(data);
 			
 			});
@@ -161,6 +172,8 @@
 			oProfileVisitor = new ProfileVisitor();
 			oProfileVisitor.setProfileHolder($("#visitedProfileContainer"));
 			oProfileVisitor.setUserFullName($("#visitedUserFullName"));
+			oProfileVisitor.setUserFullNameHeader($("#visitedUserFullNameHeader"));
+			
 			oProfileVisitor.setdisplayPic($("#visitedDisplayPic"));
 
 			$("#myProfileLink").on("tap",function(){
@@ -179,6 +192,8 @@
 				
 
 			});
+			
+			oFriendRequestManager = new FriendRequestManager();
 		});
 		
 		$(document).on("pageshow","#home",function(event,data){
@@ -562,7 +577,7 @@
 		<div data-role="header" data-position="fixed" style="text-align:center;position: fixed;top: 0;left: 0;right: 0;">
 			<a data-rel="back" class="ui-btn ui-corner-all ui-icon-back ui-btn-icon-notext">Back Button</a>
 			<a id="homeBtn" href="#home" class="ui-btn ui-corner-all ui-icon-home ui-btn-icon-notext">Home Icon</a>
-			<h1 id="visitedUserFName"></h1>
+			<h1 id="visitedUserFullNameHeader"></h1>
 	    </div>
 	
 		<div id="visitedProfileContainer" style="max-width:80%, margin: auto;padding: 5px;">

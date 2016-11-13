@@ -15,34 +15,6 @@
                         {
                             "xml": "<feature name=\"Device\"><param name=\"browser-package\" value=\"Device\" /></feature>",
                             "count": 1
-                        },
-                        {
-                            "xml": "<feature name=\"FacebookConnectPlugin\"><param name=\"browser-package\" value=\"FacebookConnectPlugin\" /><param name=\"onload\" value=\"true\" /></feature>",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<plugin name=\"FacebookConnectPlugin\" value=\"FacebookConnectPlugin\" />",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<access origin=\"https://m.facebook.com\" />",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<access origin=\"https://graph.facebook.com\" />",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<access origin=\"https://api.facebook.com\" />",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<access origin=\"https://*.fbcdn.net\" />",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<access origin=\"https://*.akamaihd.net\" />",
-                            "count": 1
                         }
                     ]
                 }
@@ -113,9 +85,8 @@
         "cordova-plugin-compat": {
             "PACKAGE_NAME": "com.paninkath"
         },
-        "phonegap-facebook-plugin": {
-            "APP_ID": "505827316274441",
-            "APP_NAME": "PaninKath",
+        "phonegap-plugin-push": {
+            "SENDER_ID": "899585413812",
             "PACKAGE_NAME": "com.paninkath"
         }
     },
@@ -725,11 +696,19 @@
             ]
         },
         {
-            "file": "plugins/phonegap-facebook-plugin/facebookConnectPlugin.js",
-            "id": "phonegap-facebook-plugin.FacebookConnectPlugin",
-            "pluginId": "phonegap-facebook-plugin",
+            "file": "plugins/phonegap-plugin-push/www/push.js",
+            "id": "phonegap-plugin-push.PushNotification",
+            "pluginId": "phonegap-plugin-push",
             "clobbers": [
-                "facebookConnectPlugin"
+                "PushNotification"
+            ]
+        },
+        {
+            "file": "plugins/phonegap-plugin-push/www/browser/push.js",
+            "id": "phonegap-plugin-push.BrowserPush",
+            "pluginId": "phonegap-plugin-push",
+            "clobbers": [
+                "PushNotification"
             ]
         }
     ],
@@ -755,6 +734,6 @@
         "cordova-plugin-vibration": "2.1.1",
         "cordova-plugin-whitelist": "1.2.2",
         "cordova-plugin-compat": "1.0.0",
-        "phonegap-facebook-plugin": "0.12.0"
+        "phonegap-plugin-push": "1.8.4"
     }
 }

@@ -101,7 +101,9 @@ Search.prototype.createSearchList = function(){
 				
 				if(this.resultSet.list[i].uName !== jQuery.parseJSON(window.localStorage.getItem("userInfo")).uName){
 					
-					htmlSnippet += "<li class='ui-li-has-thumb ui-first-child' data-usr="+i+"><a href='#' class='ui-btn ui-btn-icon-right ui-icon-carat-r'><img src="+this.resultSet.list[i].uPic+">"+this.resultSet.list[i].fName + " "+ this.resultSet.list[i].lName+"</img></a></li>";
+					htmlSnippet += "<li class='ui-li-has-thumb ui-li-has-alt ui-first-child' data-usr="+i+"><a name='user' href='#' class='ui-btn'><img src="+
+					this.resultSet.list[i].uPic+">"+this.resultSet.list[i].fName + " "+ this.resultSet.list[i].lName+
+					"</img></a><a name='friendR' class='ui-btn ui-btn-icon-right ui-icon-plus'></li>";
 				}
 					
 		}
@@ -113,9 +115,20 @@ Search.prototype.createSearchList = function(){
 	
 	$("#searchResult li").on("tap",function(event){
 		
-		console.log("tapped....."+($(event.currentTarget).attr("data-usr")));
+		if(event.target.name === "friendR"){
+			
+			that.triggerFriendRequest(event);
+			return;
+		}
+		
 		$( ":mobile-pagecontainer" ).pagecontainer( "change", "#visitedProfilePage");
 		$(that).trigger("SHOW_USERPROFILE",[that.resultSet.list[$(event.currentTarget).attr("data-usr")]]);
 	});
 
+};
+
+Search.prototype.triggerFriendRequest = function(event){
+	
+	$(this).trigger("FRIEND_REQUEST",[this.resultSet.list[$(event.currentTarget).attr("data-usr")]]);
+	
 };

@@ -454,10 +454,11 @@ module.exports = [
         ]
     },
     {
-        "file": "plugins/phonegap-facebook-plugin/facebookConnectPlugin.js",
-        "id": "phonegap-facebook-plugin.FacebookConnectPlugin",
+        "id": "phonegap-plugin-push.PushNotification",
+        "file": "plugins/phonegap-plugin-push/www/push.js",
+        "pluginId": "phonegap-plugin-push",
         "clobbers": [
-            "facebookConnectPlugin"
+            "PushNotification"
         ]
     }
 ];
@@ -485,7 +486,7 @@ module.exports.metadata =
     "cordova-plugin-statusbar": "2.1.3",
     "cordova-plugin-vibration": "2.1.1",
     "cordova-plugin-whitelist": "1.2.2",
-    "phonegap-facebook-plugin": "0.12.0"
+    "phonegap-plugin-push": "1.8.4"
 };
 // BOTTOM OF METADATA
 });

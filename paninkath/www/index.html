@@ -54,6 +54,8 @@
 	<script src="js/com/profile/profileManager.js"></script>
 	<script src="js/com/profile/profileVisitor.js"></script>
 	<script src="js/util/imageupload/imageUploader.js"></script>
+	<script src="js/com/friends/friendRequestManager.js"></script>
+	
 
 	<script>
 	
@@ -61,6 +63,7 @@
 		var oProfileManager;
 		var oProfileVisitor;
 		var oSearch;
+		var oFriendRequestManager;
 		document.addEventListener("deviceready", onDeviceReady, false);
 
 
@@ -107,10 +110,18 @@
 			oSearch = new Search();
 			oSearch.setResultHolder($("#searchResult"));
 			
+			
+			
+			$(oSearch).on("FRIEND_REQUEST",function(event,data){
+			
+				console.log("FRIEND_REQUEST....");
+				oFriendRequestManager.setData(data);
+				
+			
+			});
+			
 			$(oSearch).on("SHOW_USERPROFILE",function(event,data){
 			
-				console.log("Listening....");
-				
 				oProfileVisitor.setUserData(data);
 			
 			});
@@ -181,6 +192,8 @@
 				
 
 			});
+			
+			oFriendRequestManager = new FriendRequestManager();
 		});
 		
 		$(document).on("pageshow","#home",function(event,data){

@@ -64,9 +64,8 @@
         "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "com.paninkath"
         },
-        "phonegap-facebook-plugin": {
-            "APP_ID": "505827316274441",
-            "APP_NAME": "PaninKath",
+        "phonegap-plugin-push": {
+            "SENDER_ID": "899585413812",
             "PACKAGE_NAME": "com.paninkath"
         }
     },

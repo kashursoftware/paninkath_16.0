@@ -1,0 +1,113 @@
+<div id="login" class="login" data-role="page">
+			<div data-role="header">
+				<h1><b>PaninKath...</b></h1>
+		    </div>
+		   <div data-role="main" class="ui-content">
+		     <form id="loginForm" method="post">
+				<p id="loginMsg" style="text-align: left"></p>
+				<input id="uName" type="text" name="uName" placeHolder="User Name">
+				<input id="uPwd" type="password" name="uPwd" placeHolder="Password">
+				<a id="loginBtn" data-role="button"  data-transition="slide" data-direction="forward" changeHash="false">Login</a><!--class="button ui-disabled"-->
+				<a id="forgotPassword">Forgot Password</a>
+			 </form>
+			 
+			 <!-- POPUPS-->
+			 
+			<div id="logoutPopup"  data-role="popup" data-overlay-theme="a" data-position-to="window">
+				
+					<div id="logoutPopupContent" data-role="main" class="ui-content">
+					
+						<div data-role="header"><h3><b>Logout?</b></h3></div>
+						<div><p>Are you sure you want to logout?</p></div>
+						<button id="logoutYes">Yes</button>
+						<button id="logoutNo">No</button>
+						
+					</div>
+				  
+			 </div>
+			
+			 <div id="failedToLogin" data-role="popup" data-overlay-theme="b" data-position-to="window">
+				
+				<div data-role="header"><h1><b>Paninkath</b></h1></div>
+					<p id="loginFailMessage"><b>Incorrect username and password :(</b></p>
+			 </div>
+			 
+			 <div id="forgotPasswordPopup"  data-role="popup" data-overlay-theme="b" data-position-to="window">
+				
+					<div data-role="header"><h1><b>Paninkath</b></h1></div>
+					<div id="forgotPwdPopupContent" data-role="main" class="ui-content">
+						<p><b>We have sent you a temporary password by SMS, use it to create your new permanent password</b></p>
+						<form id="updatePwdForm" method="post">
+							<input id="tmpPwd" type="text" name="tmpPwd" placeHolder="OTP" />
+							<input id="newPwd" type="password" name="newPwd" placeHolder="New Password" />
+							<input id="cNewPwd" type="password" name="cNewPwd" placeHolder="Confirm Password" />
+							<a id="updateNewPwd" data-role="button" class="button" data-inline="true" changeHash="false">Submit</a>
+						</form>
+					</div>
+				  
+			 </div>
+			 
+			 <div id="emptyUserName"  data-role="popup" data-overlay-theme="b" data-position-to="window">
+				
+					<div data-role="header"><h1><b>Paninkath</b></h1></div>
+					<div id="emptyUserNameContent" data-role="main" class="ui-content">
+						<p><b>Please type in your username first</b></p>
+					</div>
+				  
+			 </div>
+			 
+			 <div id="noSuchUserName"  data-role="popup" data-overlay-theme="b" data-position-to="window">
+				
+					<div data-role="header"><h1><b>Paninkath</b></h1></div>
+					<div id="noSuchUserNameContent" data-role="main" class="ui-content">
+						<p><b>This username does not exist</b></p>
+					</div>
+				  
+			 </div>
+			 
+			 <div id="noConnection"  data-role="popup" data-overlay-theme="b" data-position-to="window">
+				
+					<div data-role="header"><h1><b>Paninkath</b></h1></div>
+					<div id="noConnectionContent" data-role="main" class="ui-content">
+						<p><b>We couldn't connect to services, please check your internet connection</b></p>
+					</div>
+				  
+			 </div>
+			 
+			 <div id="unknownError"  data-role="popup" data-overlay-theme="b" data-position-to="window">
+				
+					<div data-role="header"><h1><b>Paninkath</b></h1></div>
+					<div id="unknownErrorContent" data-role="main" class="ui-content">
+						<p><b>We are not what happened there. Please report this at www.paninkath.com</b></p>
+					</div>
+				  
+			 </div>
+			 
+			 <div id="pwdUpdateSuccessful"  data-role="popup" data-overlay-theme="b" data-position-to="window">
+				
+					<div data-role="header"><h1><b>Paninkath</b></h1></div>
+					<div id="pwdUpdateSuccessfulContent" data-role="main" class="ui-content">
+						<p><b>Password updated successfully!</b></p>
+					</div>
+				  
+			 </div>
+			 
+			 
+			 <div id="incorrectTPWD"  data-role="popup" data-overlay-theme="b" data-position-to="window">
+				
+					<div data-role="header"><h1><b>Paninkath</b></h1></div>
+					<div id="incorrectTPWDContent" data-role="main" class="ui-content">
+						<p><b>Could not update password, you entered an incorrect temporary password. Try again!</b></p>
+					</div>
+				  
+			 </div>
+			 
+			 <!--POPUPS End-->
+			 <div id="social" class="social">
+				<a id="fbLogin" href="#login" data-role="button" data-transition="slide" data-direction="forward" changeHash="false">FB</a>
+			 </div>
+
+			 <a id="signUpBtn" href="#signUp1" data-role="button" class="button" data-transition="slide" data-direction="forward" changeHash="false">Sign Up!</a>
+
+		   </div>
+	</div>

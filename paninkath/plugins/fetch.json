@@ -168,16 +168,14 @@
         "is_top_level": true,
         "variables": {}
     },
-    "phonegap-facebook-plugin": {
+    "phonegap-plugin-push": {
         "source": {
-            "type": "git",
-            "url": "https://github.com/Wizcorp/phonegap-facebook-plugin.git",
-            "subdir": "."
+            "type": "registry",
+            "id": "phonegap-plugin-push@1.8.4"
         },
         "is_top_level": true,
         "variables": {
-            "APP_ID": "505827316274441",
-            "APP_NAME": "PaninKath"
+            "SENDER_ID": "899585413812"
         }
     }
 }

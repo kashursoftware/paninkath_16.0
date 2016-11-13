@@ -44,26 +44,21 @@ function onFBLogin(){
 		onLoginSuccess();
 	}
 
-	facebookConnectPlugin.login(["public_profile"],
+	/*facebookConnectPlugin.login(["public_profile"],
 		fbLoginSuccess,
 		function (error) { 
 			
 			alert("" + error) 
 		}
-	);
+	);*/
 
 }
 
 function onLoginSuccess(response){
 		
-	/*$( ":mobile-pagecontainer" ).on( "pagecontainerbeforechange", function( event, ui ) {
-		
-		var obj = jQuery.parseJSON(response.user);
-		$("#welmsg").text("Welcome to Paninkath "+obj.fName);
-		
-	} );*/
-		
+	
 	$( ":mobile-pagecontainer" ).pagecontainer( "change", "#home");
+	updateUserKey();
 		
 };
 
@@ -82,6 +77,7 @@ function autoLogin(){
 		}, 
 		success: function(response) {
 			$( ":mobile-pagecontainer" ).pagecontainer( "change", "#home");
+			updateUserKey();
 		},
 		error: function(xhr) {
 			console.log(xhr);
@@ -113,9 +109,20 @@ function destroyToken(){
 
 function logoutUser(){
 	
-	window.location.reload(true);
-	destroyToken();
-	 $( ":mobile-pagecontainer" ).pagecontainer( "change", "#login");
+	window.push.unregister(function() {
+
+		console.log('success');
+		window.location.reload(true);
+		destroyToken();
+		$( ":mobile-pagecontainer" ).pagecontainer( "change", "#login");
+	}, function() {
+		console.log('error');
+		window.location.reload(true);
+		destroyToken();
+		$( ":mobile-pagecontainer" ).pagecontainer( "change", "#login");
+	});
+
+	
 };
 
 function openLogoutDialog(event){
@@ -264,4 +271,57 @@ function performPasswordUpdate(){
 		}
 	});
 	
+};
+
+function updateUserKey(){
+	
+	
+	window.push = PushNotification.init({
+				android: {
+					senderID: "899585413812"
+				}
+		});
+			
+	window.push.on('registration', function(data) {
+		// data.registrationId
+		
+		console.log("Registered.....!!!!");
+		$.ajax({
+			url: "http://vps.hilfe.website:3800/setUserRegisteredKey",
+			type: "get", //send it through get method
+			headers: {
+				'X-Auth-Token' : window.localStorage.getItem("token")
+			},
+			data:{"regKey":data.registrationId},
+			success: function(response) {
+				console.log("Key updated");
+			},
+			error: function(xhr) {
+				console.log(xhr);
+			}
+		});
+		
+		
+	});
+	
+	window.push.on('notification', function(data) {
+	console.log("notification received...");
+		// data.message,
+		// data.title,
+		// data.count,
+		// data.sound,
+		// data.image,
+		// data.additionalData
+		
+		window.push.setApplicationIconBadgeNumber(function() {
+			console.log('success');
+			}, function() {
+			console.log('error');
+		}, data.count);
+	});
+	
+	window.push.on('error', function(e) {
+		// e.message
+		console.log("Error........");
+	});
 };

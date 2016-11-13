@@ -34,49 +34,279 @@
         * Enable eval(): add 'unsafe-eval' to default-src
     * Create your own at http://cspisawesome.com
     -->
-     <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: 'unsafe-inline' https://ssl.gstatic.com; style-src 'self' 'unsafe-inline'; media-src *" />
+	<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; connect-src http://vps.hilfe.website:3800">
+    <!--<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; connect-src http://vps.hilfe.website:3800 https://2factor.in">-->
+	<!--<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; connect-src https://2factor.in">-->
     <link rel="stylesheet" type="text/css" href="css/index.css" />
-    <title>Hello World</title>
+	<link rel="newest stylesheet" type="text/css" href="css/styles.css" />
 	<link rel="stylesheet" href="js/libs/jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.css">
 	<script src="js/libs/jquery.mobile-1.4.5/jquery-1.11.3.min.js"></script>
 	<script src="js/libs/jquery.mobile-1.4.5/jquery.mobile-1.4.5.js"></script>
+	<script src="js/libs/validator/dist/jquery.validate.js"></script>
+	<script src="js/libs/tooltipster/dist/js/tooltipster.bundle.js"></script>
+	<link rel="stylesheet" type="text/css" href="js/libs/tooltipster/dist/css/tooltipster.bundle.css" />	
+	<!--<link rel="stylesheet" type="text/css" href="js/libs/tooltipster/dist/css/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-shadow.min" />-->
+	<script src="js/com/reg.js"></script>
+	<script src="js/com/login.js"></script>
+	<script src="js/util/validation/validationManager.js"></script>
+	<script src="js/util/validation/validationRules.js"></script>
+	<script src="js/com/search/search.js"></script>
+	<script src="js/com/profile/profileManager.js"></script>
+	<script src="js/com/profile/profileVisitor.js"></script>
+	<script src="js/util/imageupload/imageUploader.js"></script>
+	
 
 	<script>
+	
+		var that = this;
+		var oProfileManager;
+		var oProfileVisitor;
+		var oSearch;
 		document.addEventListener("deviceready", onDeviceReady, false);
 
 
 		$(document).on("pagecreate","#login",function(){
-			   
+			  			   
+			 $("#loginBtn").on("tap",loginUser);
+			  
+			  $("#forgotPassword").on("tap",$.proxy(getTmpPwd,that));
+			  
+			  initializeToolipsterOnForm($('#updatePwdForm input'));
+			  validateUpdatePwdForm();
+			  
+			  enableLinkButton($("#updateNewPwd"));
+			  
+			  autoLogin();
+			  
 		});
+		
+		$(document).on("pagebeforeshow","#login",function(event,data){
+		
+			
+			if( (isUserLoggedIn()) && (data.prevPage.attr("id") === "home")){
+				
+				$("#login").hide();
+				navigator.app.exitApp();
+			}
+		
+		});
+		
+
+		
+				
+		$(document).on( "pageshow","#login" ,function( event, ui ) {
+
+			$('#signUpForm1').find("input").val("");
+			$('#signUpForm2').find("input").val("");
+			$('#loginForm').find("input").val("");
+			
+			
+		});
+		
+		$(document).on( "pagecreate","#searchPage" ,function( event, ui ) {
+			
+			oSearch = new Search();
+			oSearch.setResultHolder($("#searchResult"));
+			
+			$(oSearch).on("SHOW_USERPROFILE",function(event,data){
+			
+				console.log("Listening....");
+				
+				oProfileVisitor.setUserData(data);
+			
+			});
+			
+			
+			$("#searchField").on("keyup",$.proxy(oSearch.searchPeople,oSearch));
+			$("#searchField").on("change",function(){
+			
+				//$.proxy(oSearch.searchPeople,oSearch);
+				window.setTimeout(function(){oSearch.searchPeople()},0);
+			});
+			
+			
+			$("#searchPeopleLink").on("tap",function(){
+				
+				oProfileManager.hideMyProfile();
+				$( ":mobile-pagecontainer" ).pagecontainer( "change", "#searchPage");
+				oSearch.showSearchPage();
+			});
+		});
+		
+		$(document).on( "pagecreate","#home" ,function( event, ui ) {
+			
+			
+			
+			$("#userListBtn").on("tap",function(){
+			
+				oProfileManager.hideMyProfile();
+				$( ":mobile-pagecontainer" ).pagecontainer( "change", "#searchPage");
+				oSearch.showSearchPage();
+			});
+			
+			$("#homeBtn").on("tap",function(){
+			
+				oProfileManager.showMyProfile();
+			});
+		   
+		   
+			$("#logoutLink").on("tap",logoutUser);	
+			
+			oProfileManager = new ProfileManager();
+			oProfileManager.setProfileHolder($("#profileContainer"));
+			oProfileManager.setUserFullName($("#userFullName"));
+			oProfileManager.setdisplayPic($("#displayPic"));
+			oProfileManager.setQuote($("#quoteTxtArea"));
+			
+			
+			oProfileVisitor = new ProfileVisitor();
+			oProfileVisitor.setProfileHolder($("#visitedProfileContainer"));
+			oProfileVisitor.setUserFullName($("#visitedUserFullName"));
+			oProfileVisitor.setUserFullNameHeader($("#visitedUserFullNameHeader"));
+			
+			oProfileVisitor.setdisplayPic($("#visitedDisplayPic"));
+
+			$("#myProfileLink").on("tap",function(){
+			
+				oProfileManager.showMyProfile();
+			});
+			
+			var oImageUploader = new ImageUploader();
+			
+			$("#displayPic").on("taphold",function(){
+				
+				if($("#profileContainer").hasClass("ownProfile")){
+					
+					oImageUploader.browseImage();
+				}
+				
+
+			});
+		});
+		
+		$(document).on("pageshow","#home",function(event,data){
+		
+			oProfileManager.showMyProfile();
+		
+		});
+		
+		$(document).on("pagecreate","#signUp1",function(){//
+		
+			initializeToolipsterOnForm($('#tempCodeForm input'));
+			validateTempCodeForm();
+		
+			$("#verifyMobile").on("tap",$.proxy(verifyNumber,that));//
+			
+			$("#vCode").on("keyup",function(){
+			
+				if(this.value.length >=6){
+					enableLinkButton($("#verifyCode"),true, $.proxy(validateCode,that));
+				}else{
+					enableLinkButton($("#verifyCode"));
+				}
+			
+		});
+			
+		$(document).on("pageshow","#signUp1",function(){
+			
+			$("#verifyMobile").html("Verify Number");
+			enableLinkButton($("#verifyMobile"), true, $.proxy(verifyNumber,window));
+			
+		});
+			
+			
+		
+			initializeToolipsterOnForm($('#signUpForm1 input'));
+	
+			validateSignUp1();
+			
+			enableLinkButton($("#next1"));
+			enableLinkButton($("#verifyCode"));
+			
+			$("#verifyMobile").hide();
+		});
+		
+		$(document).on("pagecreate","#signUp2",function(){
+			   
+			 initializeToolipsterOnForm($('#signUpForm2 input'));
+			 validateSignUp2();
+			 enableLinkButton($("#doneBtn"));
+			 $("#doneBtn").on("tap",registerUser);
+			 
+			 //$("#nUName").on("keyup",$.proxy(checkUNameAvailability,that));
+			// $("#nUName").on("focusin",$.proxy(checkUNameAvailability,that));
+			 
+			
+
+		});
+		
+		function initializeToolipsterOnForm(elements){
+			
+			// initialize tooltipster on form input elements
+			elements.tooltipster({ 
+				'interactive': true,
+				touchDevices: true,
+				trigger: 'custom', // default is 'hover' which is no good here
+				onlyOne: false,    // allow multiple tips to be open at a time
+				side: "top",  // display the tips to the right of the element
+				distance: 0,
+				functionPosition: function(instance, helper, position){
+					
+					if(helper.geo.origin.size.width > position.size.width){
+						position.coord.left = Math.abs(helper.geo.origin.size.width - position.size.width) + 18;
+					}
+					
+					//position.side = "top"
+					return position;
+				}
+    
+			});
+		
+		};
+		
+		$(document).on("pagecreate","#home",function(){
+		
+			   $("#showSideMenu").on("tap",function(){
+			   
+			   
+			   });
+
+		});
+		
 		function onDeviceReady(){
 		
 			$("#fbLogin").on("tap",onFBLogin);
-
-		}
-
-		function onFBLogin(){
-		
-			var fbLoginSuccess = function (userData) {
-			    //alert("UserInfo: " + JSON.stringify(userData));
-				onLoginSuccess();
-			}
-
-			facebookConnectPlugin.login(["public_profile"],
-			    fbLoginSuccess,
-			    function (error) { 
-					
-					alert("" + error) 
-				}
-			);
-
-		}
-
-		function onLoginSuccess(){
-		
-				$.mobile.changePage( "#home", { transition: "slide", changeHash: false });
-		};
-
+			$("#loginBtn").on("tap",loginUser);
 			
+			var push = PushNotification.init({
+				android: {
+					senderID: "899585413812"
+				}
+			});
+			
+			push.on('registration', function(data) {
+				// data.registrationId
+				
+				console.log("Registered.....!!!!");
+			});
+			
+			push.on('notification', function(data) {
+			
+			console.log("notification received...");
+				// data.message,
+				// data.title,
+				// data.count,
+				// data.sound,
+				// data.image,
+				// data.additionalData
+			});
+			
+			push.on('error', function(e) {
+				// e.message
+				console.log("Error........");
+			});
+				
+		}	
 
 	</script>
 
@@ -91,21 +321,137 @@
     </div>
 
 	<div id="login" class="login" data-role="page">
-			<div data-role="header">
+			<div data-role="header" >
 				<h1><b>PaninKath...</b></h1>
 		    </div>
 		   <div data-role="main" class="ui-content">
-		     <form method="post" action="demoform.asp">
-				<input type="text" name="uname" id="uname" placeHolder="User Name">
-				<input type="password" name="pwd" id="pwd" placeHolder="Password">
-				<a href="#login" data-role="button" class="button ui-disabled" data-transition="slide" data-direction="forward" changeHash="false">Login</a>
+		     <form id="loginForm" method="post">
+				<p id="loginMsg" style="text-align: left"></p>
+				<input id="uName" type="text" name="uName" placeHolder="User Name">
+				<input id="uPwd" type="password" name="uPwd" placeHolder="Password">
+				<a id="loginBtn" data-role="button"  data-transition="slide" data-direction="forward" changeHash="false">Login</a><!--class="button ui-disabled"-->
+				<a id="forgotPassword">Forgot Password</a>
 			 </form>
+			 
+			 <!-- POPUPS-->
+			 
+			<div id="logoutPopup"  data-role="popup" data-overlay-theme="a" data-position-to="window">
+				
+					<div id="logoutPopupContent" data-role="main" class="ui-content">
+					
+						<div data-role="header"><h3><b>Logout?</b></h3></div>
+						<div><p>Are you sure you want to logout?</p></div>
+						<button id="logoutYes">Yes</button>
+						<button id="logoutNo">No</button>
+						
+					</div>
+				  
+			 </div>
+			
+			 <div id="failedToLogin" data-role="popup" data-overlay-theme="b" data-position-to="window">
+				
+				<div data-role="header"><h1><b>Paninkath</b></h1></div>
+					<p id="loginFailMessage"><b>Incorrect username and password :(</b></p>
+			 </div>
+			 
+			 <div id="forgotPasswordPopup"  data-role="popup" data-overlay-theme="b" data-position-to="window">
+				
+					<div data-role="header"><h1><b>Paninkath</b></h1></div>
+					<div id="forgotPwdPopupContent" data-role="main" class="ui-content">
+						<p><b>We have sent you a temporary password by SMS, use it to create your new permanent password</b></p>
+						<form id="updatePwdForm" method="post">
+							<input id="tmpPwd" type="text" name="tmpPwd" placeHolder="OTP" />
+							<input id="newPwd" type="password" name="newPwd" placeHolder="New Password" />
+							<input id="cNewPwd" type="password" name="cNewPwd" placeHolder="Confirm Password" />
+							<a id="updateNewPwd" data-role="button" class="button" data-inline="true" changeHash="false">Submit</a>
+						</form>
+					</div>
+				  
+			 </div>
+			 
+			 <div id="emptyUserName"  data-role="popup" data-overlay-theme="b" data-position-to="window">
+				
+					<div data-role="header"><h1><b>Paninkath</b></h1></div>
+					<div id="emptyUserNameContent" data-role="main" class="ui-content">
+						<p><b>Please type in your username first</b></p>
+					</div>
+				  
+			 </div>
+			 
+			 <div id="noSuchUserName"  data-role="popup" data-overlay-theme="b" data-position-to="window">
+				
+					<div data-role="header"><h1><b>Paninkath</b></h1></div>
+					<div id="noSuchUserNameContent" data-role="main" class="ui-content">
+						<p><b>This username does not exist</b></p>
+					</div>
+				  
+			 </div>
+			 
+			 <div id="noConnection"  data-role="popup" data-overlay-theme="b" data-position-to="window">
+				
+					<div data-role="header"><h1><b>Paninkath</b></h1></div>
+					<div id="noConnectionContent" data-role="main" class="ui-content">
+						<p><b>We couldn't connect to services, please check your internet connection</b></p>
+					</div>
+				  
+			 </div>
+			 
+			 <div id="unknownError"  data-role="popup" data-overlay-theme="b" data-position-to="window">
+				
+					<div data-role="header"><h1><b>Paninkath</b></h1></div>
+					<div id="unknownErrorContent" data-role="main" class="ui-content">
+						<p><b>We are not what happened there. Please report this at www.paninkath.com</b></p>
+					</div>
+				  
+			 </div>
+			 
+			 <div id="pwdUpdateSuccessful"  data-role="popup" data-overlay-theme="b" data-position-to="window">
+				
+					<div data-role="header"><h1><b>Paninkath</b></h1></div>
+					<div id="pwdUpdateSuccessfulContent" data-role="main" class="ui-content">
+						<p><b>Password updated successfully!</b></p>
+					</div>
+				  
+			 </div>
+			 
+			 
+			 <div id="incorrectTPWD"  data-role="popup" data-overlay-theme="b" data-position-to="window">
+				
+					<div data-role="header"><h1><b>Paninkath</b></h1></div>
+					<div id="incorrectTPWDContent" data-role="main" class="ui-content">
+						<p><b>Could not update password, you entered an incorrect temporary password. Try again!</b></p>
+					</div>
+				  
+			 </div>
+			 
+				<!-- <div id="quote"  data-role="popup" data-overlay-theme="a" data-position-to="window">
+				
+					<div id="logoutPopupContent" data-role="main" class="ui-content">
+					
+						<div data-role="header"><h3><b>Logout?</b></h3></div>
+						<div><p>Are you sure you want to logout?</p></div>
+						<button id="logoutYes">Yes</button>
+						<button id="logoutNo">No</button>
+						
+					</div>
+					GCM:
+					AIzaSyBmaQ9uJdr1wDWZj3QB1oP1tUz2Iexc8k4
+					
+					AWS:
+					Access Key ID:
+					AKIAJ6LIPI5I3Y7GQGBQ
+					Secret Access Key:
+					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
+
+				  
+			 </div>-->
+			 
+			 <!--POPUPS End-->
 			 <div id="social" class="social">
 				<a id="fbLogin" href="#login" data-role="button" data-transition="slide" data-direction="forward" changeHash="false">FB</a>
-				<a href="#login" data-role="button" class="button ui-disabled" data-transition="slide" data-direction="forward" changeHash="false">Gmail</a>
 			 </div>
 
-			 <a href="#signUp1" data-role="button" class="button" data-transition="slide" data-direction="forward" changeHash="false">Sign Up!</a>
+			 <a id="signUpBtn" href="#signUp1" data-role="button" class="button" data-transition="slide" data-direction="forward" changeHash="false">Sign Up!</a>
 
 		   </div>
 	</div>
@@ -115,43 +461,150 @@
 				<h1><b>PaninKath...</b></h1>
 		    </div>
 		   <div data-role="main" class="ui-content">
-		     <form method="post" action="demoform.asp">
-				<input type="text" name="fname" id="fname" placeHolder="First Name">
-				<input type="text" name="lname" id="lname" placeHolder="Last Name">
-				<input type="email" name="uemail" id="uemail" placeHolder="email">
+		     <form id="signUpForm1" method="post" class="signUpForm">
+			 	
+				<input id="nUName" type="text" name="nUName" placeHolder="Enter User Name">
+				<input id="nUPwd" type="password" name="nUPwd" placeHolder="Password">
+				<input id="nUCPwd" type="password" name="nUCPwd" placeHolder="Confirm Password">
+				<input id="nUNumber" type="number" name="nUNumber" placeHolder="Mobile Number" />
+				<a id="verifyMobile">Verify Number</a>
 			 </form>
+			 
+			 <div data-role="popup" id="verifyNumberPopup" data-overlay-theme="b" data-position-to="window">
+				
+					<div data-role="header"><h1><b>Paninkath</b></h1></div>
+					<br>
+					<p><b>Enter below the code received in SMS:</b></p>
+					
+					<div data-role="main" class="ui-content">
+						<form id="tempCodeForm">
+							<input id="vCode" type="number" name="vCode" placeHolder="Verification code" />
+							<a id="verifyCode" data-role="button" class="button" data-inline="true" changeHash="false">Done</a>
+						</form>
+					</div>
+				  
+				</div>
 
 	         <a href="#login" data-role="button" class="button" data-transition="slide" data-direction="reverse" data-inline="true" changeHash="false">Back</a> 
-			 <a href="#signUp2" data-role="button" class="button" data-transition="slide" data-direction="forward" data-inline="true" changeHash="false">Next</a>
+			 <a id="next1" href="#signUp2" data-role="button" class="button" tabIndex="-1" data-transition="slide" data-direction="forward" data-inline="true" changeHash="false" enabled="false">Next</a>
 			 
 		   </div>
 	</div>
 
-	<div id="signUp2" class="signUp" data-role="page">
+	<div id="signUp2" class="signUp" data-role="page" class="signUpForm">
 			<div data-role="header">
 				<h1><b>PaninKath...</b></h1>
 		    </div>
 		   <div data-role="main" class="ui-content">
-		     <form method="post" action="demoform.asp">
-				<input type="text" name="uname" id="uname" placeHolder="User Name">
-				<input type="password" name="pwd" id="upwd" placeHolder="Password">
-				<input type="password" name="cpwd" id="cupwd" placeHolder="Confirm Password">
+		     <form id="signUpForm2" method="post" action="demoform.asp" class="form">
+				<input id="fName" type="text" name="fName" placeHolder="First Name"/>
+				<input id="lName" type="text" name="lName" placeHolder="Last Name" />
 			 </form>
 
 			 <a href="#signUp1" data-role="button" class="button" data-transition="slide" data-direction="reverse" data-inline="true" changeHash="false">Back</a> <!--data-inline="true" -->
- 			 <a href="#login" data-role="button" class="button" data-transition="slide" data-direction="forward" data-inline="true" changeHash="false">Done</a> <!--data-inline="true" -->
+ 			 <a id="doneBtn" href="#login" data-role="button" class="button" data-transition="slide" data-direction="forward" data-inline="true" changeHash="false">Done</a> <!--data-inline="true" -->
 
 		   </div>
 	</div>
 
 
 	<div id="home" class="home" data-role="page">
-			<div data-role="header">
-				<h1><b>PaninKath...</b></h1>
+	
+			<div data-role="panel" id="myPanel" data-display="overlay">
+					<h3>Menu</h3><br>
+
+					<ul data-role="listview">
+						<li><a id="myProfileLink" href="#home" data-rel="close">My Profile</a></li>
+						<li><a id="searchPeopleLink" data-rel="close" href="#home">Search People</a></li>
+						<li><a href="#home" data-rel="close">Settings</a></li>
+						<li><a href="#home" data-rel="close">Preferences</a></li>
+						<li><a href="#home" data-rel="close">Security</a></li>
+						<li><a id="logoutLink" href="#" data-rel="close" data-transition="slide">Logout</a></li>
+					</ul>
+			</div>
+			
+			<div data-role="header" data-position="fixed" style="text-align:center;position: fixed;top: 0;left: 0;right: 0;">
+				<a href="#myPanel" class="ui-btn ui-corner-all ui-icon-bars ui-btn-icon-notext ui-btn-a"></a>				
+				<a id="homeBtn" href="#" class="ui-btn ui-corner-all ui-icon-home ui-btn-icon-notext">Home Icon</a>
+				<h1><b>PaninKath</b></h1>
 		    </div>
+			
+			<div id="appContent">
+			
+				<div id="profileWrapper" style="max-width:80%, margin: auto;padding: 5px;">
+					<div id="profileContainer">
+						
+						<div class="profilePic">
+                            <div class="profilePhoto">
+                                <img id="displayPic" data-inline="true" width="80%" height="80%" src="./img/defaultProfilePic.png" alt=""/>
+                                <button id="btnUpload" data-inline="true" class="iconBtn btnUpload" >
+                                <span aria-hidden="true" class="glyphicon glyphicon-pencil"></span>
+                                </button>
+                            </div>
+                        </div>
+
+						<h2 id="userFullName"></h2>
+						<textarea id="quoteTxtArea" rows="4" cols="50" maxlength="100" readonly>Share a quote..</textarea>
+					</div>
+				</div>
+				
+			</div>
+			
+			<div data-role="footer" style="text-align:center;position: fixed;bottom: 0;left: 0;right: 0;" data-position="fixed">
+				  <a href="#" class="ui-btn ui-corner-all ui-icon-video ui-btn-icon-notext">Video Icon</a>
+				  <a href="#" class="ui-btn ui-corner-all ui-icon-phone ui-btn-icon-notext">Phone Icon</a>				  				 
+				  <a href="#" id="userListBtn" class="ui-btn ui-corner-all ui-icon-search ui-btn-icon-notext">Search</a>
+				  <a href="#" class="ui-btn ui-corner-all ui-icon-heart ui-btn-icon-notext">Heart Icon</a>
+				  <a href="#" class="ui-btn ui-corner-all ui-icon-comment ui-btn-icon-notext">Chats</a>
+			</div>
+			
+			
+			
+			
+			
 		   <div data-role="main" class="ui-content">
-			<h1> Coming Soon...</h1>
+		   
+						
 		   </div>
+	</div>
+	
+	<div id="searchPage" data-role="page">
+	
+		<div data-role="header" data-position="fixed" style="text-align:center;position: fixed;top: 0;left: 0;right: 0;">
+			<a data-rel="back" class="ui-btn ui-corner-all ui-icon-back ui-btn-icon-notext">Back Button</a>
+			<a id="homeBtn" href="#home" class="ui-btn ui-corner-all ui-icon-home ui-btn-icon-notext">Home Icon</a>
+			<h1><b>Search People</b></h1>
+	    </div>
+		
+		<div style="max-width:80%, margin: auto;padding: 5px;">
+			<input id="searchField" type="search" name="firstname" placeHolder="Search People" style="max-width:80%">
+			
+			<div id="searchResultWrapper">
+				<ul id="searchResult" data-role="listview" data-inset="true" class="ui-listview ui-listview-inset ui-corner-all ui-shadow" style="max-height:100%;top:0;overflow: auto;-webkit-overflow-scrolling:touch;">
+				</ul>
+			</div>
+		</div>
+		
+		
+	</div>
+	
+	<div id="visitedProfilePage" data-role="page">
+	
+		<div data-role="header" data-position="fixed" style="text-align:center;position: fixed;top: 0;left: 0;right: 0;">
+			<a data-rel="back" class="ui-btn ui-corner-all ui-icon-back ui-btn-icon-notext">Back Button</a>
+			<a id="homeBtn" href="#home" class="ui-btn ui-corner-all ui-icon-home ui-btn-icon-notext">Home Icon</a>
+			<h1 id="visitedUserFullNameHeader"></h1>
+	    </div>
+	
+		<div id="visitedProfileContainer" style="max-width:80%, margin: auto;padding: 5px;">
+			
+			<div class="profilePic">
+					<img id="visitedDisplayPic" data-inline="true" width="80%" height="80%" src="./img/defaultProfilePic.png" alt=""/>
+			</div>
+			
+			<h2 id="visitedUserFullName"></h2>
+			<textarea id="visitedQuoteTxtArea" rows="4" cols="50" maxlength="100" readonly>Share a quote..</textarea>
+		</div>
 	</div>
 
     <script type="text/javascript" src="cordova.js"></script>
