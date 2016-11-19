@@ -77,7 +77,7 @@ function autoLogin(){
 		}, 
 		success: function(response) {
 			$( ":mobile-pagecontainer" ).pagecontainer( "change", "#home");
-			updateUserKey();
+			console.log("called.................................................................................");
 		},
 		error: function(xhr) {
 			console.log(xhr);
@@ -113,9 +113,32 @@ function logoutUser(){
 			
 		window.push.unregister(function() {
 			console.log('success');
-			window.location.reload(true);
-			destroyToken();
-			$( ":mobile-pagecontainer" ).pagecontainer( "change", "#login");
+			
+			
+			$.ajax({
+				url: "http://vps.hilfe.website:3800/removeUserRegisteredKey",
+				type: "get", //send it through get method
+				headers: {
+					'X-Auth-Token' : window.localStorage.getItem("token")
+				},
+				data:{"regKey":window.localStorage.getItem("PK_regId")},
+				success: function(response) {
+					console.log("Key updated");
+					window.location.reload(true);
+					destroyToken();
+					$( ":mobile-pagecontainer" ).pagecontainer( "change", "#login");
+				},
+				error: function(xhr) {
+					console.log(xhr);
+					window.location.reload(true);
+					destroyToken();
+					$( ":mobile-pagecontainer" ).pagecontainer( "change", "#login");
+				}
+			});
+			
+			
+		
+		
 		}, function() {
 			console.log('error');
 			window.location.reload(true);
@@ -294,6 +317,7 @@ function updateUserKey(){
 	window.push.on('registration', function(data) {
 		// data.registrationId
 		
+		window.localStorage.setItem("PK_regId", data.registrationId);
 		console.log("Registered.....!!!!");
 		$.ajax({
 			url: "http://vps.hilfe.website:3800/setUserRegisteredKey",
